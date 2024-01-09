@@ -1,0 +1,10 @@
+multimat: errorHandler.o mainmat.o promptsAndPrints.o mymat.o
+	gcc -ansi -Wall -pedantic errorHandler.o mainmat.o promptsAndPrints.o mymat.o -o multimat
+errorHandler.o: errorHandler.c mymat.h
+	gcc -ansi -Wall -pedantic -c errorHandler.c -o errorHandler.o
+mainmat.o: mainmat.c mymat.h
+	gcc -ansi -Wall -pedantic -c mainmat.c -o mainmat.o
+promptsAndPrints.o: promptsAndPrints.c mymat.h
+	gcc -ansi -Wall -pedantic -c promptsAndPrints.c -o promptsAndPrints.o
+mymat.o: mymat.c mymat.h
+	gcc -ansi -Wall -pedantic -c mymat.c -o mymat.o
