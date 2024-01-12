@@ -4,9 +4,10 @@
 #include <stdlib.h>
 
 #define MAT_SIZE 4
+#define MAT_NAME_SIZE 6
 /* A matrix structure with a name and default size of 4x4. */
 typedef struct{
-    const char name[6];
+    const char name[MAT_NAME_SIZE];
     float matrix[MAT_SIZE][MAT_SIZE];
 } mat; 
 
@@ -19,7 +20,7 @@ void mul_scalar(mat *MAT_A, float num, mat *MAT_B);
 void trans_mat(mat *MAT_A, mat *MAT_B);
 void stop();
 
-//trans mat
+
 int main(){
     mat MAT_A = {"MAT_A",{{1, 2, 3, 4}, {5, 1, 2, 3}, {4, 5, 1, 2}, {3, 4, 5, 1}} };
     mat MAT_B = {"MAT_B",{{2, 3, 4, 5}, {1, 2, 3, 4}, {5, 1, 2, 3}, {4, 5, 1, 2}} };
@@ -59,18 +60,18 @@ void sub_mat(mat *MAT_A, mat *MAT_B, mat *MAT_C){
     }
 }
 void mul_mat(mat *MAT_A, mat *MAT_B, mat *MAT_C){
-    mat temp = { "RESULT", { {0.0} } };
+    mat result = { "RESULT", { {0.0} } };
     int i,j,k;
     for (i = 0; i < MAT_SIZE; i++) {
         for (j = 0; j < MAT_SIZE; j++) {
             for (k = 0; k < MAT_SIZE; k++) {
-                temp.matrix[i][j] += MAT_A->matrix[i][k] * MAT_B->matrix[k][j];
+                result.matrix[i][j] += MAT_A->matrix[i][k] * MAT_B->matrix[k][j];
             }
         }
     }
     for (i = 0; i < MAT_SIZE; i++) {
         for (j = 0; j < MAT_SIZE; j++) {
-            MAT_C->matrix[i][j] = temp.matrix[i][j];
+            MAT_C->matrix[i][j] = result.matrix[i][j];
         }
     }
 }
@@ -83,16 +84,16 @@ void mul_scalar(mat *MAT_A, float num, mat *MAT_B){
     }
 }
 void trans_mat(mat *MAT_A, mat *MAT_B){
-    mat temp = { "RESULT", { {0.0} } };
+    mat result = { "RESULT", { {0.0} } };
     int i,j;
     for (i = 0; i < MAT_SIZE; i++) {
         for (j = 0; j < MAT_SIZE; j++) {
-            temp.matrix[i][j] = MAT_A->matrix[j][i];
+            result.matrix[i][j] = MAT_A->matrix[j][i];
         }
     }
     for (i = 0; i < MAT_SIZE; i++) {
         for (j = 0; j < MAT_SIZE; j++) {
-            MAT_B->matrix[i][j] = temp.matrix[i][j];
+            MAT_B->matrix[i][j] = result.matrix[i][j];
         }
     }
 }

@@ -28,18 +28,18 @@ void sub_mat(mat *MAT_A, mat *MAT_B, mat *MAT_C) {
 
 /* Multiplies two matrices and stores the result in MAT_C */
 void mul_mat(mat *MAT_A, mat *MAT_B, mat *MAT_C) {
-    mat temp = { "RESULT", { {0.0} } };
+    mat result = { "RESULT", { {0.0} } };
     int i, j, k;
     for (i = 0; i < MAT_SIZE; i++) {
         for (j = 0; j < MAT_SIZE; j++) {
             for (k = 0; k < MAT_SIZE; k++) {
-                temp.matrix[i][j] += MAT_A->matrix[i][k] * MAT_B->matrix[k][j];
+                result.matrix[i][j] += MAT_A->matrix[i][k] * MAT_B->matrix[k][j];
             }
         }
     }
     for (i = 0; i < MAT_SIZE; i++) {
         for (j = 0; j < MAT_SIZE; j++) {
-            MAT_C->matrix[i][j] = temp.matrix[i][j];
+            MAT_C->matrix[i][j] = result.matrix[i][j];
         }
     }
 }
@@ -56,16 +56,16 @@ void mul_scalar(mat *MAT_A, float num, mat *MAT_B) {
 
 /* Transposes MAT_A and stores the result in MAT_B */
 void trans_mat(mat *MAT_A, mat *MAT_B) {
-    mat temp = { "RESULT", { {0.0} } };
+    mat result = { "RESULT", { {0.0} } };
     int i, j;
     for (i = 0; i < MAT_SIZE; i++) {
         for (j = 0; j < MAT_SIZE; j++) {
-            temp.matrix[i][j] = MAT_A->matrix[j][i];
+            result.matrix[i][j] = MAT_A->matrix[j][i];
         }
     }
     for (i = 0; i < MAT_SIZE; i++) {
         for (j = 0; j < MAT_SIZE; j++) {
-            MAT_B->matrix[i][j] = temp.matrix[i][j];
+            MAT_B->matrix[i][j] = result.matrix[i][j];
         }
     }
 }
