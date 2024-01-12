@@ -84,7 +84,7 @@ void mul_scalar(mat *MAT_A, float num, mat *MAT_B){
     }
 }
 void trans_mat(mat *MAT_A, mat *MAT_B){
-    mat result = { "RESULT", { {0.0} } };
+    mat results = { "RESULT", { {0.0} } };
     int i,j;
     for (i = 0; i < MAT_SIZE; i++) {
         for (j = 0; j < MAT_SIZE; j++) {
