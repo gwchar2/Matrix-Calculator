@@ -8,11 +8,12 @@
 
 
 /**********************************************
-**********      print_mat command       *******
+**********      print commands       **********
 **********************************************/
+/* Prints a specific matrix */
 void print_mat(mat *matrix) {
     int i,j;
-    printf("Printing %s:\n", matrix->name); /* NEED TO REMOVE THIS LINE !!*/
+    printf("Printing %s:\n", matrix->name); 
     for (i = 0; i < MAT_SIZE; i++) {
         for (j = 0; j < MAT_SIZE; j++) {
             printf("%.2f\t", matrix->matrix[i][j]);
@@ -20,9 +21,36 @@ void print_mat(mat *matrix) {
         printf("\n");
     }
 }
+
+/* This function prompts the user for input */
+void desired_command(){ 
+    printf("\nEnter the desired command and matrices with the correct syntax!:  (e.g., mul_mat mat_a, mat_b, mat_c):\n");
+}
+
+/* This function send the user a very nice welcome message on his first time to the app */
+void welcome(){
+    printf("*************************************************************************************************\n");
+    printf("*\t\t\t\t\t\t\t\t\t\t\t\t*\n*");
+    printf("\t\t\tWelcome to the Matrix Calculator App!\t\t\t\t\t*\n");
+    printf("*\t\t\t\t\t\t\t\t\t\t\t\t*\n");
+    printf("*************************************************************************************************\n");
+    printf("*\t\tThis application allows you to perform various matrix operations.\t\t*\n*\t\tHere is a list of commands at your disposal:\t\t\t\t\t*\n");
+    printf("*\tprint_mat MAT_A              |  Prints the matrix in a nice 4x4. .2lf\t\t\t*\n"
+            "*\tadd_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A+MAT_B\t\t\t\t\t*\n"
+            "*\tsub_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A-MAT_B\t\t\t\t\t*\n"
+            "*\tmul_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A*MAT_B\t\t\t\t\t*\n"
+            "*\tmul_scalar MAT_A,#R,MAT_B    |   MAT_B = MAT_A*#R\t\t\t\t\t*\n"
+            "*\ttrans_mat MAT_A, MAT_B       |   MAT_B = Transpose(MAT_A)\t\t\t\t*\n"
+            "*\tstop                         |   stops the program\t\t\t\t\t*\n");
+    printf("*************************************************************************************************\n\n");
+}
 /**********************************************
 **********          ERRORS              *******
 **********************************************/
+/* Missing argument */
+void err_miss_argument(){
+    printf("Missing argument!\n");
+}
 /* Undefined matrix name */
 void err_mat_name(){
     printf("Undefined matrix name!\n");
@@ -38,10 +66,6 @@ void err_num(){
 /* Extraneous text after end of command */
 void err_text(){
     printf("Extraneous text after end of command!\n");
-}
-/* Missing argument */
-void err_miss_argument(){
-    printf("Missing argument!\n");
 }
 /* Missing comma */
 void err_miss_comma(){
@@ -61,7 +85,7 @@ void err_not_scalar(){
 }
 /* No stop() command from file */
 void err_no_stop(){
-    printf("There is no stop command at the end of the file...\nTerminating the program!");
+    printf("There is no stop command at the end of the file...\nTerminating the program!\n");
     stop();
 }
 
@@ -70,7 +94,7 @@ void err_no_stop(){
 **********************************************/
 /* A message when stop() is received */
 void msg_stop(){
-    printf("Stopping the program...");
+    printf("Stopping the program...\n");
     stop();
 }
 /* A message when read_mat() is received */

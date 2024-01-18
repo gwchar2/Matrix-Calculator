@@ -14,9 +14,14 @@ Instructions:
 [] After receiving the user input, and BEFORE doing commands according to it,
     must print the same text input (if it is correct), and only afterwords do the command.
     This way, when receiving a command from txt file - the command will be printed, and only than will the action be done.
+
 [] Every command must be received only in ONE LINE, and it must be COMPLETE. If it is not complete --> Error! (For example, mul_scalar Mat_A,MAT_B <-- Missing the scalar)
-[] The command and the first argument are seperated by spaces or tabs (one or more)
+
+[] The command and the first argument are seperated by spaces or tabs (one or more) 
+
+
 [] Between two arguments, there is only one ',' Before the ',' there can be an unlimited amount of spaces and/or tabs.
+
 [] A comma is NOT ALLOWED after the last argument!
 [] There can be an unlimited amount of tabs and/or spaces BEFORE the name of the command and AFTER the last argument.
 [] There can not be any useless characters after the last argument.
@@ -57,33 +62,40 @@ IMPORTANT:
 Example for bad commands, and error messages:
     read_mat MAT_G, 3.2, 8 - Undefined matrix name
     read_mat mat_a, 3.2, -5.3 - Undefined matrix name
-    do_it MAT_A, MAT_B, MAT_C - Undefined command name
-    Add_Mat MAT_A, MAT_B, MAT_C - Undefined command name
     read_mat MAT_A, abc, 567 - Argument is not a real number
     read_mat MAT_A, 3, -4.2, 6, - Extraneous text after end of command
     read_mat MAT_A - Missing argument
-    mul_mat MAT_B, MAT_C - Missing argument
-    trans_mat MAT_B, MAT_C, MAT_D - Extraneous text after end of command
-    print_mat, MAT_A - Illegal comma
+
     trans_mat MAT_A MAT_B - Missing comma
+    mul_mat MAT_B, MAT_C - Missing argument
     sub_mat MAT_A, , MAT_B, MAT_C - Multiple consecutive commas
-    mul_scalar MAT_A, MAT_B, MAT_C - Argument is not a scalar
-    stop now - Extraneous text after end of command
+
+x   trans_mat MAT_B, MAT_C, MAT_D  - Extraneous text after end of command
+x   mul_scalar MAT_A, MAT_B, MAT_C - Argument is not a scalar
+x   stop now - Extraneous text after end of command
+x   do_it MAT_A, MAT_B, MAT_C - Undefined command name
+x   Add_Mat MAT_A, MAT_B, MAT_C - Undefined command name
+x   print_mat, MAT_A - Illegal comma
+
 
 
 A correct list of commands:
-print_mat MAT_A
-print_mat MAT_B
-print_mat MAT_C
+
 read_mat MAT_A, 1, 2, 3, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 6, 6, 6, 6, 6
 read_mat MAT_B, 1, 2.3456, -7.89
 read_mat MAT_C, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+read_mat MAT_B, 0
+
+
+print_mat MAT_A
+print_mat MAT_B
+print_mat MAT_C
 print_mat MAT_A
 print_mat MAT_B
 print_mat MAT_C
 add_mat MAT_A, MAT_B, MAT_D
 print_mat MAT_D
-sub_mat MAT_B, MAT_A, MAT_E
+x sub_mat MAT_B, MAT_A, MAT_E
 print_mat MAT_E
 mul_mat MAT_B, MAT_C, MAT_F
 print_mat MAT_F
@@ -91,12 +103,9 @@ mul_scalar MAT_A, 12.5, MAT_A
 print_mat MAT_A
 trans_mat MAT_C, MAT_C
 print_mat MAT_C
-read_mat MAT_B, 0
 print_mat MAT_B
 mul_mat MAT_A,MAT_A,MAT_A
 print_mat MAT_A
 stop
 
 
-
-command/error list ???

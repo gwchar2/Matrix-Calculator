@@ -7,6 +7,11 @@ allowing other modules to use its functionality without having access to the imp
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stddef.h>
+#include <unistd.h>
+
+
 #include "promptsAndPrints.c"
 #include "errorHandler.c"
 #include "mymat.c"
@@ -21,6 +26,12 @@ typedef struct{
 /**********************************************
 **********      Prompts and Prints      *******
 **********************************************/
+void print_mat(mat *matrix) /* Print matrix values for the specified matrix */
+
+void desired_command() /* This function prompts the user for input */
+
+void welcome() /* This function send the user a very nice welcome message on his first time to the app */
+
 void err_mat_name(); /* Print error message for undefined matrix name */
 
 void err_com_name(); /* Print error message for undefined command name */
@@ -55,7 +66,6 @@ void msg_mul_scalar(mat *matrixA, mat *matrixB, float num); /* Print message whe
 
 void msg_trans_mat(mat *matrixA, mat *matrixB); /* Print message when trans_mat() is received */
 
-void print_mat(mat *matrix); /* Print matrix values for the specified matrix */
 
 /**********************************************
 **********      mymat.c commands       *******
@@ -74,5 +84,20 @@ void trans_mat(mat *MAT_A, mat *MAT_B); /* Transpose MAT_A, store the result in 
 
 
 
+/**********************************************
+*******      errorHandler commands       ******
+**********************************************/
 
 void stop(); /* Stops the program execution */
+
+int check_mat_name(char *variables) /* This method checks if a user-inputted matrix name is correct. */
+
+int check_cmd_name(char *cmd) /* This method checks if a user-inputted command name is correct - but with a comma after it */
+
+int check_R(char *mat_b)  /* This function checks to see if the input in mat_b is a double (R) */
+
+double turn_to_R(char *mat_b) /* This function turns the input in mat_b to a double (R) */
+
+enum Commands process_command(char *input) /* This command processes the user input for desired command. */
+
+void my_free(char **operation,char **mat_a_name,char **mat_b_name,char **mat_c_name); /* Frees the allocated memory if it was previously allocated */
