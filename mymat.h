@@ -17,6 +17,8 @@ allowing other modules to use its functionality without having access to the imp
 #include "mymat.c"
 #include "mainmat.c"
 
+#define COMMANDS_COUNT 9
+
 /* A matrix structure with a name and default size of 4x4. */
 typedef struct{
     const char name[6];

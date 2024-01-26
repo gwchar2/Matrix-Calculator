@@ -23,7 +23,7 @@ void print_mat(mat *matrix) {
 }
 
 /* This function prompts the user for input */
-void desired_command(){ 
+void prompt_message(){ 
     printf("\nEnter the desired command and matrices with the correct syntax!:  (e.g., mul_mat mat_a, mat_b, mat_c):\n");
 }
 
@@ -34,7 +34,7 @@ void welcome(){
     printf("\t\t\tWelcome to the Matrix Calculator App!\t\t\t\t\t*\n");
     printf("*\t\t\t\t\t\t\t\t\t\t\t\t*\n");
     printf("*************************************************************************************************\n");
-    printf("*\t\tThis application allows you to perform various matrix operations.\t\t*\n*\t\tHere is a list of commands at your disposal:\t\t\t\t\t*\n");
+    printf("*\tThis application allows you to perform various matrix operations.\t\t\t*\n*\tHere is a list of commands at your disposal:\t\t\t\t\t\t*\n");
     printf("*\tprint_mat MAT_A              |  Prints the matrix in a nice 4x4. .2lf\t\t\t*\n"
             "*\tadd_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A+MAT_B\t\t\t\t\t*\n"
             "*\tsub_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A-MAT_B\t\t\t\t\t*\n"

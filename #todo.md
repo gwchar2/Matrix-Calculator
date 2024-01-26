@@ -67,8 +67,7 @@ Example for bad commands, and error messages:
     read_mat MAT_A - Missing argument
 
     trans_mat MAT_A MAT_B - Missing comma
-    mul_mat MAT_B, MAT_C - Missing argument
-    sub_mat MAT_A, , MAT_B, MAT_C - Multiple consecutive commas
+x   sub_mat MAT_A, , MAT_B, MAT_C - Multiple consecutive commas
 
 x   trans_mat MAT_B, MAT_C, MAT_D  - Extraneous text after end of command
 x   mul_scalar MAT_A, MAT_B, MAT_C - Argument is not a scalar
@@ -76,7 +75,7 @@ x   stop now - Extraneous text after end of command
 x   do_it MAT_A, MAT_B, MAT_C - Undefined command name
 x   Add_Mat MAT_A, MAT_B, MAT_C - Undefined command name
 x   print_mat, MAT_A - Illegal comma
-
+x   mul_mat MAT_B, MAT_C - Missing argument
 
 
 A correct list of commands:
