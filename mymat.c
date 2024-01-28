@@ -1,4 +1,4 @@
-/* ONLY THE MATHEMATICAL FUNCTIONS HERE */
+
 #include <stdio.h>
 #include <string.h>
 #include "promptsAndPrints.c"
