@@ -8,15 +8,17 @@
 #define MAT_SIZE 4
 #define MAT_NAME_SIZE 6
 #define COMMANDS_COUNT 9
-#define WHITESPACE(c) ((c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v'))
-
-
+#define WHITESPACE(c) ((c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v'))     /* Checks if a character is a whitespace */
+#define DELIMETER_1 (" ,\t\n\r\f\v") /* A delimeter for strtok function with a comma */
+#define DELIMITER_2 (" \t\n\r\f\v") /* A delimeter for strtok function without a comma */
+#define MY_FREE()  free_data(myCommand->user_input, inputCopy)
 /* A matrix structure with a name and default size of 4x4. */
 typedef struct{
     const char name[MAT_NAME_SIZE];
     double matrix[MAT_SIZE][MAT_SIZE];
 } mat; 
 
+/* An enum of command values */
 enum Commands{
     READ_MAT,
     PRINT_MAT,
@@ -28,35 +30,66 @@ enum Commands{
     STOP,
     INVALID
 };
-int handle_comma_error(int comma_error_handler);
-int get_Command(char *pointer,enum Commands *user_command);
-int get_mat_A(char *pointer, enum Commands *user_command, mat **user_mat_a, mat **matrices,int comma_error_handler);
-int get_mat_B(char *pointer, enum Commands *user_command, mat **user_mat_b, mat **matrices,int comma_error_handler,double user_scalar);
-int get_mat_C(char *pointer, enum Commands *user_command,mat **user_mat_c, mat **matrices,int comma_error_handler);
-void activate_command(enum Commands *user_command,mat **user_mat_a,mat **user_mat_b,mat **user_mat_c, double read_scalars);
-int comma_handler(char *input,size_t read,double read_scalars,enum Commands *user_command);
-int onStart(enum Commands *user_command,char **input,mat **matrices, mat **user_mat_a, mat **user_mat_b, mat **user_mat_c,double user_scalar,double *read_scalars);
-void free_data(char **input,char *inputCopy);
 
+/* A command structure with a respective name & variables. */
+typedef struct{
+    char *user_input;
+    enum Commands user_cmd;
+    mat *user_mat_a;
+    mat *user_mat_b;
+    mat *user_mat_c;
+    double user_scalar;
+} cmd;
+
+/**** MAIN COMMANDS ****/
+int onStart(cmd *myCommand,mat **matrices,double *read_scalars);
+void activate_command(cmd *myCommand);
+
+
+/**** ERROR HANDLER COMMANDS ****/
+int check_cmd_name(char* cmd);
+int check_scalar(char *mat_b); /* Checks if the matrix is a double (R) */
+double turn_to_scalar(char *mat_b); /* Converts the matrix to a double number */
+enum Commands process_command(char* input);
+int comma_handler(cmd *myCommand,size_t read);
+int get_mat_A(char *pointer, cmd *myCommand, mat **matrices,int comma_error_handler);
+int get_mat_B(char *pointer, cmd *myCommand, mat **matrices,int comma_error_handler);
+int get_mat_C(char *pointer, cmd *myCommand, mat **matrices,int comma_error_handler);
+int get_Command(char *pointer,cmd *myCommand);
+int handle_comma_error(int comma_error_handler);
+void free_data(char *input,char *inputCopy);
+void stop(); /* Stops the program */
+
+
+/**** promptsAndPrints COMMANDS ****/
+void print_mat(mat *matrix);
+void prompt_message();
+void welcome();
+void err_miss_argument(); /* Print error message for missing argument */
 void err_mat_name(); /* Print error message for undefined matrix name */
 void err_com_name(); /* Print error message for undefined command name */
 void err_num(); /* Print error message for argument not being a real number */
 void err_text(); /* Print error message for extraneous text after the end of the command */
-void err_miss_argument(); /* Print error message for missing argument */
 void err_miss_comma(); /* Print error message for missing comma */
 void err_illegal_comma(); /* Print error message for illegal comma */
 void err_consec_comma(); /* Print error message for multiple consecutive commas */
 void err_not_scalar(); /* Print error message for argument not being a scalar */
 void err_no_stop(); /* Print error message when no stop() command is found at the end of the file */
-void stop(); /* Stops the program */
-void welcome();
 void msg_stop();
-void prompt_message();
-void print_mat(mat *matrix);
-enum Commands process_command(char* input);
-int check_cmd_name(char* cmd);
-int check_scalar(char *mat_b); /* Checks if the matrix is a double (R) */
-double turn_to_scalar(char *mat_b); /* Converts the matrix to a double number */
+void msg_read_mat(mat *matrix);
+void msg_add_mat(mat *matrixA,mat *matrixB,mat *matrixC);
+void msg_sub_mat(mat *matrixA,mat *matrixB,mat *matrixC);
+void msg_mul_mat(mat *matrixA,mat *matrixB,mat *matrixC);
+void msg_mul_scalar(mat *matrixA,mat *matrixB,double num);
+void msg_trans_mat(mat *matrixA,mat *matrixB);
+
+/**** mymat.c COMMANDS ****/
+void add_mat(mat *MAT_A, mat *MAT_B, mat *MAT_C);
+void sub_mat(mat *MAT_A, mat *MAT_B, mat *MAT_C);
+void mul_mat(mat *MAT_A, mat *MAT_B, mat *MAT_C);
+void mul_scalar(mat *MAT_A, double num, mat *MAT_B);
+void trans_mat(mat *MAT_A, mat *MAT_B);
+
 
 int main(){
     mat MAT_A = {"MAT_A",{{1, 2, 3, 4}, {5, 1, 2, 3}, {4, 5, 1, 2}, {3, 4, 5, 1}} };
@@ -66,25 +99,35 @@ int main(){
     mat MAT_E = {"MAT_E",{ {0.0} } };
     mat MAT_F = {"MAT_F",{ {0.0} } };
     mat *matrices[6] = {&MAT_A, &MAT_B, &MAT_C, &MAT_D, &MAT_E, &MAT_F};
-    mat *user_mat_a, *user_mat_b, *user_mat_c;
-    double user_scalar;
     double read_scalars[16] = {0};
-    enum Commands user_command;
-    char *input = NULL;
 
-    welcome();
+    /* initialize all the pointers in myCommand with a NULL */
+    cmd myCommand = {
+    .user_input = NULL,
+    .user_mat_a = NULL,                
+    .user_mat_b = NULL,
+    .user_mat_c = NULL,
+    };
+
+    welcome(); /* Calls for welcome message */
     while(1){
-        if (onStart(&user_command, &input, matrices, &user_mat_a, &user_mat_b, &user_mat_c,user_scalar, read_scalars) != 1){
-            printf("\n// REMOVE THIS Your wish is my command :%s\n",input);
-            activate_command(&user_command, &user_mat_a, &user_mat_b, &user_mat_c, user_scalar);
-            /* commas = count_commas(input);      Count Commas */
-            /* check_mat_name                     Check the matrices inputted for legal variables */
-            /* Pay attention - the onStart() gets strtok(input, " \t\n") <-- including \n on all variables */     
+        if (onStart(&myCommand,matrices,read_scalars) != 1){
+            printf("\nUser Input: %s",myCommand.user_input);
+            activate_command(&myCommand);
+            printf("\n****************************************************\n");
+            printf("\n*******************  TESTS  ************************\n");
+            printf("User input: %s",myCommand.user_input);
+            printf("User CMD: %d\n",myCommand.user_cmd);
+            printf("User CMD: %s\n",myCommand.user_mat_a->name);
+            printf("User CMD: %s\n",myCommand.user_mat_b->name);
+            printf("User CMD: %s\n",myCommand.user_mat_c->name);
+            printf("User CMD: %f\n",myCommand.user_scalar);
+            printf("****************************************************\n");
         }
 	}
 }
 
-int onStart(enum Commands *user_command, char **input, mat **matrices, mat **user_mat_a, mat **user_mat_b, mat **user_mat_c,double user_scalar,double *read_scalars){
+int onStart(cmd *myCommand,mat **matrices,double *read_scalars){
     char *pointer; /* A character pointer that helps deal with the input */
 	size_t len; /* Length of the array */
     ssize_t read; /* This variable will store how many values were read in getline() including null terminator */
@@ -92,117 +135,161 @@ int onStart(enum Commands *user_command, char **input, mat **matrices, mat **use
     char *inputCopy = NULL;
     int comma_error_handler;
     prompt_message(); /* prompts the user for input */ 
-
     /* Get the input from the user into 'input' */
-    if ((read = getline(input, &len, stdin)) == -1) {
+    if ((read = getline(&(myCommand->user_input), &len, stdin)) == -1) {
         /* If the last line in stdin was not "stop" , frees the allocated memory & calls for err_no_stop() */
-        if (strcmp(*input, "stop") != 0){
+        if (strcmp(myCommand->user_input, "stop") != 0){
             err_no_stop();
         }      
     }
     inputCopy = (char *)malloc(len);
-    strcpy(inputCopy,*input);
-
-    pointer = strtok(*input, " \n\t\r\f\v"); 
+    strcpy(inputCopy,myCommand->user_input);
+    pointer = strtok(inputCopy, DELIMITER_2); 
 
     /* Analyze the command segment */
-    if (get_Command(pointer,user_command)){
-        free_data(input, inputCopy);    /* resets the data if needed to */ 
+    if (get_Command(pointer,myCommand)){
+        MY_FREE();    /* resets the data if needed to */ 
         return 1;
     }
-
-    comma_error_handler = comma_handler(inputCopy,read,*read_scalars,user_command);            /* Stores the error value received from comma_handler*/
+    comma_error_handler = comma_handler(myCommand,read);            /* Stores the error value received from comma_handler*/
+    pointer = strtok(NULL, DELIMETER_1);
 
     /* Analyze the first matrix variable */
-    if (get_mat_A(pointer,user_command,user_mat_a,matrices,comma_error_handler)){
-        free_data(input, inputCopy);    /* resets the data if needed to */ 
+    if (get_mat_A(pointer,myCommand,matrices,comma_error_handler)){
+        MY_FREE();    /* resets the data if needed to */ 
         return 1;
     }
-    pointer = strtok(NULL, " ,\n\t\r\f\v");    
+    pointer = strtok(NULL, DELIMETER_1);  
 
     /* Analyze the second matrix variable */
-    if (get_mat_B(pointer,user_command,user_mat_b,matrices,comma_error_handler,user_scalar)){
-        free_data(input, inputCopy);    /* resets the data if needed to */ 
+    if (get_mat_B(pointer,myCommand,matrices,comma_error_handler)){
+        MY_FREE();    /* resets the data if needed to */ 
         return 1;
     }   
-    pointer = strtok(NULL, " ,\n\t\r\f\v");  
-    
+    pointer = strtok(NULL, DELIMETER_1);  
+
     /* Analyze the third matrix variable */
-    if (get_mat_C(pointer,user_command,user_mat_c,matrices,comma_error_handler)){
-        free_data(input, inputCopy);    /* resets the data if needed to */ 
+    if (get_mat_C(pointer,myCommand,matrices,comma_error_handler)){
+        MY_FREE();    /* resets the data if needed to */ 
         return 1;
     }
-    pointer = strtok(NULL, " \n\t\r\f\v");
+    pointer = strtok(NULL,DELIMITER_2);
 
     /* FIFTH VARIABLE ---- EXTRA TEXT ----/ */
     if (pointer != NULL) {                                          /* If the point has not reached a NULL, clearly there is text left! */
         err_text();                                                 /* NO COMMAND needs 4 variables...so return the extra txt error */
-        free_data(input, inputCopy);    /* resets the data if needed to */ 
+        MY_FREE();    /* resets the data if needed to */ 
         return 1;
     }
-    /* trans_mat
-    if (comma_error_handler == 1){
-        err_illegal_comma();
+    if (handle_comma_error(comma_error_handler)){
+        MY_FREE();
         return 1;
     }
-    else if (comma_error_handler == 2){
-        err_miss_comma();
-        return 1;
-    }*/
-     
-    free_data(input, inputCopy);    /* resets the data if needed to */ 
     return 0;
 }
 
 /*
+*   This function activates the prompted command.
+*/
+void activate_command(cmd *myCommand){
+    switch(myCommand->user_cmd){
+        /*case READ_MAT:
+        void msg_read_mat(mat *matrix);
+        */
+        case PRINT_MAT:
+            print_mat(myCommand->user_mat_a);
+            break;
+        case ADD_MAT:
+            msg_add_mat(myCommand->user_mat_a, myCommand->user_mat_b, myCommand->user_mat_c);
+            add_mat(myCommand->user_mat_a, myCommand->user_mat_b, myCommand->user_mat_c);
+            break;
+        case SUB_MAT:
+            msg_sub_mat(myCommand->user_mat_a, myCommand->user_mat_b, myCommand->user_mat_c);
+            sub_mat(myCommand->user_mat_a, myCommand->user_mat_b, myCommand->user_mat_c);
+            break;
+        case MUL_MAT:
+            msg_mul_mat(myCommand->user_mat_a, myCommand->user_mat_b, myCommand->user_mat_c);
+            mul_mat(myCommand->user_mat_a, myCommand->user_mat_b, myCommand->user_mat_c);
+            break;
+        case MUL_SCALAR:
+            msg_mul_scalar(myCommand->user_mat_a, myCommand->user_mat_c, myCommand->user_scalar);
+            mul_scalar(myCommand->user_mat_a, myCommand->user_scalar, myCommand->user_mat_c);
+            break;
+        case TRANS_MAT:
+            msg_trans_mat(myCommand->user_mat_a, myCommand->user_mat_b);
+            trans_mat(myCommand->user_mat_a, myCommand->user_mat_b);
+            break;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 *   This Function handles the amount of commas in the user input.
-*   If it belove or below the needed amount - returns 1, as well as if there are more than 2 in a row.
+*   Returns 1 if there is a missing comma.
+*   Returns 2 if there are extra commas.
+*   Returns 3 if there is more than 2 consecutive commas.
 *   Otherwise, it returns 0.
 */
-int comma_handler(char *input,size_t read,double read_scalars,enum Commands *user_command){
+int comma_handler(cmd *myCommand,size_t read){
     size_t i = 0;
     size_t newSize = 0; /* Holds the size of the array without whitespaces */
     int j = 0;
     int total_comma = 0, total_comma_in_a_row = 0; /* Total amount of commas in the input, and total amount of them in a row. */
     char *noSpace = NULL; /* An array of the input without whitespaces. */
-    
     for (i = 0; i < read; i++){
-        if (!WHITESPACE(input[i])){
+        if (!WHITESPACE(myCommand->user_input[i])){
             newSize++;
             noSpace = realloc(noSpace, newSize);
-            noSpace[newSize - 1] = input[i];
+            noSpace[newSize - 1] = myCommand->user_input[i];
         }
-        if (noSpace[newSize - 1] == ',' && !WHITESPACE(input[i])){
+        if (noSpace[newSize - 1] == ',' && !WHITESPACE(myCommand->user_input[i])){
             total_comma++;
             total_comma_in_a_row++;
-            printf("Letter: %c + total_comma_in_a_row %d +total_comma %d \n",(char)noSpace[newSize],total_comma_in_a_row,total_comma);
             if (total_comma_in_a_row == 2){
-                printf("%s \n",noSpace);
                 return 3;
             }
         }
-        else if (noSpace[newSize - 1] != ',' && !WHITESPACE(input[i])){
+        else if (noSpace[newSize - 1] != ',' && !WHITESPACE(myCommand->user_input[i])){
             total_comma_in_a_row = 0;
             //if (total_comma_in_a_row != 0 && noSpace[newSize - 1] != ','){
             //    total_comma_in_a_row--;
             //}
         }
     }
-    if (total_comma > 2 && (*user_command == ADD_MAT || *user_command == SUB_MAT ||
-        *user_command == MUL_MAT || *user_command == MUL_SCALAR)){
+    if (total_comma > 2 && (myCommand->user_cmd == ADD_MAT || myCommand->user_cmd == SUB_MAT ||
+        myCommand->user_cmd == MUL_MAT || myCommand->user_cmd == MUL_SCALAR)){
             return 1;
     }
-    else if (total_comma < 2 && (*user_command == ADD_MAT || *user_command == SUB_MAT ||
-        *user_command == MUL_MAT || *user_command == MUL_SCALAR)){
+    else if (total_comma < 2 && (myCommand->user_cmd == ADD_MAT || myCommand->user_cmd == SUB_MAT ||
+        myCommand->user_cmd == MUL_MAT || myCommand->user_cmd == MUL_SCALAR)){
             return 2;
     }
-    else if (total_comma > 1 && (*user_command == TRANS_MAT)){
+    else if (total_comma > 1 && (myCommand->user_cmd == TRANS_MAT)){
             return 1;
     }  
-    else if (total_comma < 1 && (*user_command == TRANS_MAT)){
+    else if (total_comma < 1 && (myCommand->user_cmd == TRANS_MAT)){
             return 2;
     }  
-    else if (total_comma >= 1 && (*user_command == STOP || *user_command == PRINT_MAT)){
+    else if (total_comma >= 1 && (myCommand->user_cmd == STOP || myCommand->user_cmd == PRINT_MAT)){
         return 1;
     }
     return 0;
@@ -212,29 +299,30 @@ int comma_handler(char *input,size_t read,double read_scalars,enum Commands *use
 *   This function analyzes the third variable. 
 *   Returns 1 if it is invalid, 0 if it is a good input.
 */
-int get_mat_C(char *pointer, enum Commands *user_command,mat **user_mat_c, mat **matrices,int comma_error_handler){
+int get_mat_C(char *pointer, cmd *myCommand, mat **matrices,int comma_error_handler){
     /* ---- MAT_C ---- */
     int i = 0;
     int numcheck = 0;
-    if (pointer == NULL && (*user_command == ADD_MAT || *user_command == MUL_SCALAR || *user_command == SUB_MAT || *user_command == MUL_MAT)) {
-        if (handle_comma_error(comma_error_handler) != 0)
-            err_miss_argument();         
+    if (pointer == NULL && (myCommand->user_cmd == ADD_MAT || myCommand->user_cmd == MUL_SCALAR || myCommand->user_cmd == SUB_MAT || myCommand->user_cmd == MUL_MAT)) {
+        err_miss_argument();         
         return 1;
     }
     else if (pointer != NULL){
-        if (*user_command == TRANS_MAT || *user_command == PRINT_MAT ){     
+        if (myCommand->user_cmd == TRANS_MAT || myCommand->user_cmd == PRINT_MAT ){     
             err_text();
             return 1;                                            /* If the command is trans_mat or print_mat return extra text error */
         }
         for (i = 0; i < 6  ; i++){
             if (strcmp(matrices[i]-> name , pointer) == 0){
-                *user_mat_c = matrices[i];
+                myCommand->user_mat_c = matrices[i];
                 numcheck = 1;
                 break;
             }
         }
         if (numcheck != 1){
             if (handle_comma_error(comma_error_handler) != 0)
+                return 1;
+            else
                 err_mat_name();
             return 1;
         }                       
@@ -246,44 +334,50 @@ int get_mat_C(char *pointer, enum Commands *user_command,mat **user_mat_c, mat *
 *   This function analyzes the second variable. 
 *   Returns 1 if it is invalid, 0 if it is a good input.
 */
-int get_mat_B(char *pointer, enum Commands *user_command,mat **user_mat_b, mat **matrices,int comma_error_handler,double user_scalar){
+int get_mat_B(char *pointer, cmd *myCommand, mat **matrices,int comma_error_handler){
     /* ---- MAT_B ---- */
     int i=0;
     int numcheck = 0;
-    if (pointer == NULL && *user_command != PRINT_MAT && *user_command != READ_MAT){
+    if (pointer == NULL && myCommand->user_cmd != PRINT_MAT && myCommand->user_cmd != READ_MAT){
         err_miss_argument();
         return 1;
     }
     if (pointer != NULL) {
-        switch (*user_command){                     
+        switch (myCommand->user_cmd){                     
             case MUL_SCALAR:                                            /* If the command is mul_scalar, checks to see if MAT_B = (R) Number */
                 if (!check_scalar(pointer)){
                     if (handle_comma_error(comma_error_handler) != 0)
+                        return 1;
+                    else
                         err_not_scalar();
                     return 1;
                 }
                 else{
-                    user_scalar = turn_to_scalar(pointer);
+                    myCommand->user_scalar = turn_to_scalar(pointer);
                     return 0;
                 }
             case PRINT_MAT:                                             /* If the command is a print_mat command, return extra txt error */
                 if (handle_comma_error(comma_error_handler) != 0)
+                    return 1;
+                else
                     err_text();
                 return 1;
             case READ_MAT:
-                printf("// FOR TEST DELETE THIS LATER // READ_MAT get_mat_b");
+                printf("// FOR TEST DELETE THIS LATER // READ_MAT get_mat_b\n");
                 return 0;
 			default:
                 for (i = 0; i < 6 ; i++){
                     if (strcmp(matrices[i]->name , pointer) == 0){
-                        *user_mat_b = matrices[i];
+                        myCommand->user_mat_b = matrices[i];
                         numcheck = 1;
                         break;
                     }
                 }
                 if (numcheck != 1){
                     if (handle_comma_error(comma_error_handler) != 0)
-                        err_mat_name();
+                        return 1;
+                else
+                    err_mat_name();
                 return 1;
                 }                                                         
             break;
@@ -295,33 +389,35 @@ int get_mat_B(char *pointer, enum Commands *user_command,mat **user_mat_b, mat *
 *   This function analyzes the first variable. 
 *   Returns 1 if it is invalid, 0 if it is a good input.
 */
-int get_mat_A(char *pointer, enum Commands *user_command,mat **user_mat_a, mat **matrices,int comma_error_handler){
+int get_mat_A(char *pointer, cmd *myCommand, mat **matrices,int comma_error_handler){
     /*  ---- MAT_A ---- */
     int i=0;
     int numcheck = 0;
-    if (pointer == NULL && *user_command != STOP){
+    if (pointer == NULL && myCommand->user_cmd != STOP){
         err_miss_argument();
         return 1;
     }
-    else if (pointer == NULL && *user_command == STOP){
+    else if (pointer == NULL && myCommand->user_cmd == STOP){
         msg_stop();
         stop();
     }
     else { 
-        switch (*user_command){
+        switch (myCommand->user_cmd){
             case STOP:
                 err_text();
                 return 1;
             default:
-                for (i = 5; i >= 0  ; i--){
+                for (i = 0; i < 6  ; i++){
                     if (strcmp(matrices[i]-> name , pointer) == 0){
-                        *user_mat_a = matrices[i];
+                        myCommand->user_mat_a = matrices[i];
                         numcheck = 1;
                         break;
                     }
                 }
                 if (numcheck != 1){
                     if (handle_comma_error(comma_error_handler) != 0)
+                        return 1;
+                    else
                         err_mat_name(); 
                     return 1;
                 }                                                         
@@ -336,7 +432,7 @@ int get_mat_A(char *pointer, enum Commands *user_command,mat **user_mat_a, mat *
 //else if (comma_error_handler == 3) err_consec_comma(), return 1;
 int handle_comma_error(int comma_error_handler){
     if (comma_error_handler == 1) {
-        //err_illegal_comma(); 
+        err_illegal_comma(); 
         return 1;
     }
     else if (comma_error_handler == 2) {
@@ -355,15 +451,15 @@ int handle_comma_error(int comma_error_handler){
 *   This function analyzes the command. 
 *   Returns 1 if it is invalid, 0 if it is a good command input.
 */
-int get_Command(char *pointer,enum Commands *user_command){
+int get_Command(char *pointer,cmd *myCommand){
     /* ---- ANALYZE THE COMMAND ---- */
     if (pointer == NULL){
         err_com_name();
         return 1;
     }
     else {
-        *user_command = process_command(pointer);                             /* Checks to see what command was inputted */
-        if ( *user_command == INVALID ) {                                     /* If the command was invalid */
+        myCommand->user_cmd = process_command(pointer);                             /* Checks to see what command was inputted */
+        if ( myCommand->user_cmd == INVALID ) {                                     /* If the command was invalid */
             if (check_cmd_name(pointer)){                                     /* Check if it was a good command with a comma */
                 err_illegal_comma();
                 return 1;
@@ -377,27 +473,6 @@ int get_Command(char *pointer,enum Commands *user_command){
     return 0;
 }
 
-/*
-*   This function activates the prompted command.
-*/
-void activate_command(enum Commands *user_command,mat **user_mat_a,mat **user_mat_b,mat **user_mat_c,double user_scalar){
-    switch(*user_command){
-        case READ_MAT:
-            ;
-        case PRINT_MAT:
-            print_mat(*user_mat_a);
-        /*case ADD_MAT:
-            add_mat(*user_mat_a, *user_mat_b, *user_mat_c);
-        case SUB_MAT:
-            add_mat(*user_mat_a, *user_mat_b, *user_mat_c);
-        case MUL_MAT:
-            add_mat(*user_mat_a, *user_mat_b, *user_mat_c);
-        case MUL_SCALAR:
-            add_mat(*user_mat_a, *user_scalar, *user_mat_c);
-        case TRANS_MAT:
-            add_mat(*user_mat_a, *user_mat_b);*/
-    }
-}
 
 
 
@@ -407,10 +482,11 @@ void activate_command(enum Commands *user_command,mat **user_mat_a,mat **user_ma
 
 
 
-void free_data(char **input,char *inputCopy){
-    if (input != NULL && *input != NULL) {     /* Initialize input to NULL every time */
-        free(*input);
-        *input = NULL;
+
+void free_data(char *input, char *inputCopy){
+    if (input != NULL) {     /* Initializes input to NULL every time if TRUE */
+        free(input);
+        input = NULL;
     }
     if (inputCopy != NULL) {
         free(inputCopy);
@@ -445,7 +521,6 @@ double turn_to_scalar(char *mat_b){
 * This command processes the user input for desired command.
 */
 enum Commands process_command(char *input) {
-
     if (strcmp(input, "print_mat") == 0) {
         return PRINT_MAT;
     } else if (strcmp(input, "add_mat") == 0) {
@@ -568,4 +643,95 @@ void print_mat(mat *matrix) {
         }
         printf("\n");
     }
+}
+
+/* Adds two matrices and stores the result in MAT_C */
+void add_mat(mat *MAT_A, mat *MAT_B, mat *MAT_C) {
+    int i, j;
+    for (i = 0; i < MAT_SIZE; i++) {
+        for (j = 0; j < MAT_SIZE; j++) {
+            MAT_C->matrix[i][j] = MAT_A->matrix[i][j] + MAT_B->matrix[i][j];
+        }
+    }
+}
+
+/* Subtracts MAT_B from MAT_A and stores the result in MAT_C */
+void sub_mat(mat *MAT_A, mat *MAT_B, mat *MAT_C) {
+    int i, j;
+    for (i = 0; i < MAT_SIZE; i++) {
+        for (j = 0; j < MAT_SIZE; j++) {
+            MAT_C->matrix[i][j] = MAT_A->matrix[i][j] - MAT_B->matrix[i][j];
+        }
+    }
+}
+
+/* Multiplies two matrices and stores the result in MAT_C */
+void mul_mat(mat *MAT_A, mat *MAT_B, mat *MAT_C) {
+    mat result = { "RESULT", { {0.0} } };
+    int i, j, k;
+    for (i = 0; i < MAT_SIZE; i++) {
+        for (j = 0; j < MAT_SIZE; j++) {
+            for (k = 0; k < MAT_SIZE; k++) {
+                result.matrix[i][j] += MAT_A->matrix[i][k] * MAT_B->matrix[k][j];
+            }
+        }
+    }
+    for (i = 0; i < MAT_SIZE; i++) {
+        for (j = 0; j < MAT_SIZE; j++) {
+            MAT_C->matrix[i][j] = result.matrix[i][j];
+        }
+    }
+}
+
+/* Multiplies a matrix by a scalar and stores the result in MAT_B */
+void mul_scalar(mat *MAT_A, double num, mat *MAT_B) {
+    int i, j;
+    for (i = 0; i < MAT_SIZE; i++) {
+        for (j = 0; j < MAT_SIZE; j++) {
+            MAT_B->matrix[i][j] = MAT_A->matrix[i][j] * num;
+        }
+    }
+}
+
+/* Transposes MAT_A and stores the result in MAT_B */
+void trans_mat(mat *MAT_A, mat *MAT_B) {
+    mat result = { "RESULT", { {0.0} } };
+    int i, j;
+    for (i = 0; i < MAT_SIZE; i++) {
+        for (j = 0; j < MAT_SIZE; j++) {
+            result.matrix[i][j] = MAT_A->matrix[j][i];
+        }
+    }
+    for (i = 0; i < MAT_SIZE; i++) {
+        for (j = 0; j < MAT_SIZE; j++) {
+            MAT_B->matrix[i][j] = result.matrix[i][j];
+        }
+    }
+}
+
+
+
+/* A message when read_mat() is received */
+void msg_read_mat(mat *matrix){
+    printf("Initiating variables into %s ...\n",matrix->name);
+}
+/* A message when add_mat() is received */
+void msg_add_mat(mat *matrixA,mat *matrixB,mat *matrixC){
+    printf("Calculating %s = %s + %s ...\n",matrixC->name,matrixA->name,matrixB->name);
+}
+/* A message when sub_mat() is received */
+void msg_sub_mat(mat *matrixA,mat *matrixB,mat *matrixC){
+    printf("Calculating %s = %s - %s ...\n",matrixC->name,matrixA->name,matrixB->name);
+}
+/* A message when mul_mat() is received */
+void msg_mul_mat(mat *matrixA,mat *matrixB,mat *matrixC){
+    printf("Calculating %s = %s x %s ...\n",matrixC->name,matrixA->name,matrixB->name);
+}
+/* A message when mul_scalar() is received */
+void msg_mul_scalar(mat *matrixA,mat *matrixB,double num){
+    printf("Calculating %s = %s * %f ...\n",matrixB->name,matrixA->name,num);
+}
+/* A message when trans_mat() is received */
+void msg_trans_mat(mat *matrixA,mat *matrixB){
+    printf("Calculating %s = [%s]%c ...\n",matrixB->name,matrixA->name,39);
 }

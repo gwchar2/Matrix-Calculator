@@ -8,9 +8,12 @@
 
 
 /**********************************************
-**********      print commands       **********
+**********      Print Commands       **********
 **********************************************/
-/* Prints a specific matrix */
+
+/* 
+*   This function prints a specific matrix 
+*/
 void print_mat(mat *matrix) {
     int i,j;
     printf("Printing %s:\n", matrix->name); 
@@ -44,9 +47,11 @@ void welcome(){
             "*\tstop                         |   stops the program\t\t\t\t\t*\n");
     printf("*************************************************************************************************\n\n");
 }
+
 /**********************************************
-**********          ERRORS              *******
+*******         ERROR MESSAGES          *******
 **********************************************/
+
 /* Missing argument */
 void err_miss_argument(){
     printf("Missing argument!\n");
@@ -92,6 +97,7 @@ void err_no_stop(){
 /**********************************************
 **********     COMMAND MESSAGES         *******
 **********************************************/
+
 /* A message when stop() is received */
 void msg_stop(){
     printf("Stopping the program...\n");
@@ -103,22 +109,22 @@ void msg_read_mat(mat *matrix){
 }
 /* A message when add_mat() is received */
 void msg_add_mat(mat *matrixA,mat *matrixB,mat *matrixC){
-    printf("Calculating %s = %s + %s : \n",matrixC->name,matrixA->name,matrixB->name);
+    printf("Calculating %s = %s + %s ...\n",matrixC->name,matrixA->name,matrixB->name);
 }
 /* A message when sub_mat() is received */
 void msg_sub_mat(mat *matrixA,mat *matrixB,mat *matrixC){
-    printf("Calculating %s = %s - %s : \n",matrixC->name,matrixA->name,matrixB->name);
+    printf("Calculating %s = %s - %s ...\n",matrixC->name,matrixA->name,matrixB->name);
 }
 /* A message when mul_mat() is received */
 void msg_mul_mat(mat *matrixA,mat *matrixB,mat *matrixC){
-    printf("Calculating %s = %s x %s : \n",matrixC->name,matrixA->name,matrixB->name);
+    printf("Calculating %s = %s x %s ...\n",matrixC->name,matrixA->name,matrixB->name);
 }
 /* A message when mul_scalar() is received */
-void msg_mul_scalar(mat *matrixA,mat *matrixB,float num){
-    printf("Calculating %s = %s * %d : \n",matrixB->name,matrixA->name,num);
+void msg_mul_scalar(mat *matrixA,mat *matrixB,double num){
+    printf("Calculating %s = %s * %f ...\n",matrixB->name,matrixA->name,num);
 }
 /* A message when trans_mat() is received */
 void msg_trans_mat(mat *matrixA,mat *matrixB){
-    printf("Calculating %s = %s%c : \n",matrixB->name,matrixA->name,39);
+    printf("Calculating %s = [%s]%c ...\n",matrixB->name,matrixA->name,39);
 }
 
