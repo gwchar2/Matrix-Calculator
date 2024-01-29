@@ -1,9 +1,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "promptsAndPrints.c"
-#include "errorHandler.c"
-#include "mainmat.c"
 #include "mymat.h"
 
 /* Adds two matrices and stores the result in MAT_C */
@@ -45,7 +42,7 @@ void mul_mat(mat *MAT_A, mat *MAT_B, mat *MAT_C) {
 }
 
 /* Multiplies a matrix by a scalar and stores the result in MAT_B */
-void mul_scalar(mat *MAT_A, float num, mat *MAT_B) {
+void mul_scalar(mat *MAT_A, double num, mat *MAT_B) {
     int i, j;
     for (i = 0; i < MAT_SIZE; i++) {
         for (j = 0; j < MAT_SIZE; j++) {

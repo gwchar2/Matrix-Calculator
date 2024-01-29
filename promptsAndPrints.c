@@ -1,10 +1,8 @@
 /* THIS FILE INCLUDES ALL THE PROMPTS TO USER AND ALL THE PRINT FUNCTIONS */
 #include <stdio.h>
 #include <string.h>
-#include "mainmat.c"
-#include "errorHandler.c"
-#include "mymat.c"
 #include "mymat.h"
+
 
 
 /**********************************************

@@ -4,19 +4,9 @@ and other constructs that can be shared across multiple source files.
 The purpose of header files is to declare the interface of a module, 
 allowing other modules to use its functionality without having access to the implementation details.
 */
-
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#ifndef MYMAT_H
+#define MYMAT_H
 #include <stddef.h>
-#include <unistd.h>
-
-
-#include "promptsAndPrints.c"
-#include "errorHandler.c"
-#include "mymat.c"
-#include "mainmat.c"
-
 /**********************************************
 ****************      Macros      *************
 **********************************************/
@@ -26,8 +16,15 @@ allowing other modules to use its functionality without having access to the imp
 #define WHITESPACE(c) ((c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v'))     /* Checks if a character is a whitespace */
 #define DELIMETER_1 (" ,\t\n\r\f\v") /* A delimeter for strtok function with a comma */
 #define DELIMITER_2 (" \t\n\r\f\v") /* A delimeter for strtok function without a comma */
-#define MY_FREE()  free_data(myCommand->user_input, inputCopy) /* Frees the data */
-
+#define MY_FREE()  free_data(myCommand->user_input, inputCopy)
+#define CHECK_AND_FREE(c) \
+        if (c == 1) { \
+            MY_FREE(); /* resets the data if needed to */ \
+            return 1; \
+        } \
+        if (c == 2){ \
+            return 0; \
+        } \
 /**********************************************
 **************     Structures      ***********
 **********************************************/
@@ -50,6 +47,7 @@ enum Commands{
     INVALID
 };
 
+
 /* A command structure with a respective name & variables. */
 typedef struct{
     char *user_input;
@@ -58,6 +56,7 @@ typedef struct{
     mat *user_mat_b;
     mat *user_mat_c;
     double user_scalar;
+    double read_scalars[16];
 } cmd;
 
 /**********************************************
@@ -147,3 +146,6 @@ int handle_comma_error(int comma_error_handler); /* Calls for the correct print 
 void free_data(char *input,char *inputCopy); /* Frees the allocated memory if it was previously allocated */
 
 void stop(); /* Stops the program execution */
+
+
+#endif
