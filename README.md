@@ -20,10 +20,16 @@
     Option 1:
 
         Clone the project to your IDE, using HTTPS / SSH / GitHub CLI.
+        For example:
+            ```bash
+$ git clone https://github.com/your-username/your-repository.git
+$ cd "Path to file here"
+$ make install
+```
     
     Option 2:
 
-        Download the file physically to your computer via the "Download ZIP" option.
+        Download the file physically to your computer via the "Download ZIP" option.    
         Extract the downloaded folder to your chosen repository.
 
 ##### Step 2 -
@@ -36,7 +42,7 @@
         Open the command prompt terminal and navigate to your repository:
         
             
-            cd: C:\"Path to file here" 
+            cd C:\"Path to file here" 
             
 
     
