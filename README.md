@@ -1,5 +1,5 @@
 # Matrix Calculator
- A fully functional 4x4 Matrix Calculator.
+ A fully functional user-interactive 4x4 Matrix Calculator.
 
 # Table of Contents
 #### 1) Instructions on how to install, set up, and run the project.
