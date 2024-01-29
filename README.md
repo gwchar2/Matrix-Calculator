@@ -6,11 +6,9 @@
 
 #### 2) Usage:
 
-    i) A brief guide about the available user input
+    - A brief guide about the available user input
 
-    ii) Errors
-
-#### 3) Code examples & Tutorial
+    - Errors
 
 ## Instructions
 ##### Step 1 -
@@ -71,7 +69,7 @@ PLEASE ENTER THE CORRECT COMMAND NAME AND AMOUNT OF VARIABLES !
 - The program will not automatically print the matrices after changing them. If you want to print them you can use the print_mat command.
 - The program will only stop with the stop command.
 
-##### Errors
+### Errors
 These errors will appear when you did not enter the correct command name, name of variables, variable type, amount of variables or the correct amount of commas.
 | Output | Error |
 |----------|----------|
