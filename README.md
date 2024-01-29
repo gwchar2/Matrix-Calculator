@@ -21,7 +21,7 @@
 
         Clone the project to your IDE, using HTTPS / SSH / GitHub CLI.
         For example:
-            ```bash
+```bash
 $ git clone https://github.com/your-username/your-repository.git
 $ cd "Path to file here"
 $ make install
