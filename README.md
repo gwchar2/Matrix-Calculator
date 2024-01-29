@@ -15,7 +15,7 @@
  3) Code examples & Tutorial
 
 ## Instructions
-#####Step 1 -
+##### Step 1 -
 
     Option 1:
 
@@ -26,7 +26,7 @@
         Download the file physically to your computer via the "Download ZIP" option.
         Extract the downloaded folder to your chosen repository.
 
-#####Step 2 -
+##### Step 2 -
 
     Option 1:
         After cloning the project or importing the project from a folder, you will now need to compile the files.
