@@ -5,7 +5,7 @@ File list:
     []mymat.h - /* HEADER FILE INCLUDES THE FOLLOWING: 
                  Declarations of functions, data structures, constants and other constructs that can be shared across multiple source files. 
                  The purpose of header files is to declare the interface of a module, allowing other modules to use its functionality without having access to the implementation details. */
-    []promptsAndPrints - /* THIS FILE INCLUDES ALL THE PROMPTS TO USER AND ALL THE PRINT FUNCTIONS (HELPER FOR mainmat.c) */
+    [x]promptsAndPrints - /* THIS FILE INCLUDES ALL THE PROMPTS TO USER AND ALL THE PRINT FUNCTIONS (HELPER FOR mainmat.c) */
     []errorHandler - /* FUNCTIONS THAT HANDLE ALL THE ERRORS POSSIBLE. CHECKS THE DATA AND INPUT FROM USER !!*/
 
 
@@ -51,7 +51,7 @@ Before the program initiates the function - it must print a user friendly messag
 [x]) mul_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A*MAT_B
 [x]) mul_scalar MAT_A,#R,MAT_B    |   MAT_B = MAT_A*#R
 [x]) trans_mat MAT_A, MAT_B       |   MAT_B = Transpose(MAT_A)
-[]) stop                         |   stops the program
+[x]) stop                         |   stops the program
 
 
 IMPORTANT:

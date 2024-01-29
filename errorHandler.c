@@ -110,9 +110,6 @@ int comma_handler(cmd *myCommand,size_t read){
         }
         else if (noSpace[newSize - 1] != ',' && !WHITESPACE(myCommand->user_input[i])){
             total_comma_in_a_row = 0;
-            //if (total_comma_in_a_row != 0 && noSpace[newSize - 1] != ','){
-            //    total_comma_in_a_row--;
-            //}
         }
     }
     if (total_comma > 2 && (myCommand->user_cmd == ADD_MAT || myCommand->user_cmd == SUB_MAT ||

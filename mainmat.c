@@ -12,6 +12,16 @@
 #define DELIMETER_1 (" ,\t\n\r\f\v") /* A delimeter for strtok function with a comma */
 #define DELIMITER_2 (" \t\n\r\f\v") /* A delimeter for strtok function without a comma */
 #define MY_FREE()  free_data(myCommand->user_input, inputCopy)
+#define CHECK_AND_FREE(c) \
+        if (c == 1) { \
+            MY_FREE(); /* resets the data if needed to */ \
+            return 1; \
+        } \
+        if (c == 2){ \
+            return 0; \
+        } \
+
+
 /* A matrix structure with a name and default size of 4x4. */
 typedef struct{
     const char name[MAT_NAME_SIZE];
@@ -39,10 +49,11 @@ typedef struct{
     mat *user_mat_b;
     mat *user_mat_c;
     double user_scalar;
+    double read_scalars[16];
 } cmd;
 
 /**** MAIN COMMANDS ****/
-int onStart(cmd *myCommand,mat **matrices,double *read_scalars);
+int onStart(cmd *myCommand,mat **matrices);
 void activate_command(cmd *myCommand);
 
 
@@ -59,7 +70,7 @@ int get_Command(char *pointer,cmd *myCommand);
 int handle_comma_error(int comma_error_handler);
 void free_data(char *input,char *inputCopy);
 void stop(); /* Stops the program */
-
+int check_read_mat(cmd *myCommand,char *pointer,char *inputCopy,mat **matrices);
 
 /**** promptsAndPrints COMMANDS ****/
 void print_mat(mat *matrix);
@@ -99,7 +110,7 @@ int main(){
     mat MAT_E = {"MAT_E",{ {0.0} } };
     mat MAT_F = {"MAT_F",{ {0.0} } };
     mat *matrices[6] = {&MAT_A, &MAT_B, &MAT_C, &MAT_D, &MAT_E, &MAT_F};
-    double read_scalars[16] = {0};
+    
 
     /* initialize all the pointers in myCommand with a NULL */
     cmd myCommand = {
@@ -107,11 +118,12 @@ int main(){
     .user_mat_a = NULL,                
     .user_mat_b = NULL,
     .user_mat_c = NULL,
+    .read_scalars = {0},
     };
 
     welcome(); /* Calls for welcome message */
     while(1){
-        if (onStart(&myCommand,matrices,read_scalars) != 1){
+        if (onStart(&myCommand,matrices) != 1){
             printf("\nUser Input: %s",myCommand.user_input);
             activate_command(&myCommand);
             printf("\n****************************************************\n");
@@ -127,64 +139,60 @@ int main(){
 	}
 }
 
-int onStart(cmd *myCommand,mat **matrices,double *read_scalars){
-    char *pointer; /* A character pointer that helps deal with the input */
-	size_t len; /* Length of the array */
-    ssize_t read; /* This variable will store how many values were read in getline() including null terminator */
-	len = 0; /* This variable will store the total size of the input recieved */
+int onStart(cmd *myCommand,mat **matrices){
+    char *pointer;                                                            /* A character pointer that helps deal with the input */
+	size_t len;                                                               /* Length of the array */
+    ssize_t read;                                                             /* This variable will store how many values were read in getline() including null terminator */
+	len = 0;                                                                  /* This variable will store the total size of the input recieved */
     char *inputCopy = NULL;
     int comma_error_handler;
-    prompt_message(); /* prompts the user for input */ 
-    /* Get the input from the user into 'input' */
+    prompt_message();                                                         /* prompts the user for input */ 
+
+    /* Get the input from the user into 'myCommand->user_input' */
     if ((read = getline(&(myCommand->user_input), &len, stdin)) == -1) {
         /* If the last line in stdin was not "stop" , frees the allocated memory & calls for err_no_stop() */
         if (strcmp(myCommand->user_input, "stop") != 0){
             err_no_stop();
         }      
     }
-    inputCopy = (char *)malloc(len);
+
+    inputCopy = (char *)malloc(len);                                          /* Copies the input to a trash string */
     strcpy(inputCopy,myCommand->user_input);
+
     pointer = strtok(inputCopy, DELIMITER_2); 
 
-    /* Analyze the command segment */
-    if (get_Command(pointer,myCommand)){
-        MY_FREE();    /* resets the data if needed to */ 
-        return 1;
+    /* Analyze the command segment & go to the next token */
+    CHECK_AND_FREE(get_Command(pointer,myCommand));
+
+    if (myCommand->user_cmd == READ_MAT){
+        CHECK_AND_FREE(check_read_mat(myCommand,pointer,inputCopy,matrices));
     }
-    comma_error_handler = comma_handler(myCommand,read);            /* Stores the error value received from comma_handler*/
+
+    comma_error_handler = comma_handler(myCommand,read);                        /* Stores the error value received from comma_handler*/
     pointer = strtok(NULL, DELIMETER_1);
 
-    /* Analyze the first matrix variable */
-    if (get_mat_A(pointer,myCommand,matrices,comma_error_handler)){
-        MY_FREE();    /* resets the data if needed to */ 
-        return 1;
-    }
+    /* Analyze the first matrix variable & go to the next token  */
+    CHECK_AND_FREE(get_mat_A(pointer,myCommand,matrices,comma_error_handler));
     pointer = strtok(NULL, DELIMETER_1);  
 
-    /* Analyze the second matrix variable */
-    if (get_mat_B(pointer,myCommand,matrices,comma_error_handler)){
-        MY_FREE();    /* resets the data if needed to */ 
-        return 1;
-    }   
+    /* Analyze the second matrix variable & go to the next token */
+    CHECK_AND_FREE(get_mat_B(pointer,myCommand,matrices,comma_error_handler));  
     pointer = strtok(NULL, DELIMETER_1);  
 
-    /* Analyze the third matrix variable */
-    if (get_mat_C(pointer,myCommand,matrices,comma_error_handler)){
-        MY_FREE();    /* resets the data if needed to */ 
-        return 1;
-    }
+    /* Analyze the third matrix variable & go to the next token */
+    CHECK_AND_FREE(get_mat_C(pointer,myCommand,matrices,comma_error_handler));
     pointer = strtok(NULL,DELIMITER_2);
 
     /* FIFTH VARIABLE ---- EXTRA TEXT ----/ */
-    if (pointer != NULL) {                                          /* If the point has not reached a NULL, clearly there is text left! */
-        err_text();                                                 /* NO COMMAND needs 4 variables...so return the extra txt error */
-        MY_FREE();    /* resets the data if needed to */ 
+    if (pointer != NULL) {                                                      /* If the point has not reached a NULL, clearly there is text left! */
+        err_text();                                                             /* NO COMMAND needs 4 variables...so return the extra txt error */
+        MY_FREE();    
         return 1;
     }
-    if (handle_comma_error(comma_error_handler)){
-        MY_FREE();
-        return 1;
-    }
+
+    /* If the command and variables are ok, handle the comma error before activating the command. */
+    CHECK_AND_FREE(handle_comma_error(comma_error_handler));
+
     return 0;
 }
 
@@ -224,7 +232,28 @@ void activate_command(cmd *myCommand){
 
 
 
+int check_read_mat(cmd *myCommand,char *pointer,char *inputCopy,mat **matrices){
+    pointer = strtok(NULL, DELIMITER_2); 
+    size_t pointer_size;
 
+    /* Sets the matrix for reading */
+    if (get_mat_A(pointer, myCommand, matrices,0)){
+        return 1;
+    }
+
+    /* Cuts to the remainder of the input */
+    pointer = strtok(NULL, "\n"); 
+    pointer_size = strlen(pointer);
+
+    if (pointer == NULL){
+        err_miss_argument();
+        return 1;
+    }
+    
+    
+
+    return 2; /* If its correct, returns 2. */
+}
 
 
 
@@ -255,6 +284,7 @@ int comma_handler(cmd *myCommand,size_t read){
     int j = 0;
     int total_comma = 0, total_comma_in_a_row = 0; /* Total amount of commas in the input, and total amount of them in a row. */
     char *noSpace = NULL; /* An array of the input without whitespaces. */
+    int amount_of_numbers;
     for (i = 0; i < read; i++){
         if (!WHITESPACE(myCommand->user_input[i])){
             newSize++;
@@ -270,9 +300,6 @@ int comma_handler(cmd *myCommand,size_t read){
         }
         else if (noSpace[newSize - 1] != ',' && !WHITESPACE(myCommand->user_input[i])){
             total_comma_in_a_row = 0;
-            //if (total_comma_in_a_row != 0 && noSpace[newSize - 1] != ','){
-            //    total_comma_in_a_row--;
-            //}
         }
     }
     if (total_comma > 2 && (myCommand->user_cmd == ADD_MAT || myCommand->user_cmd == SUB_MAT ||
@@ -362,9 +389,6 @@ int get_mat_B(char *pointer, cmd *myCommand, mat **matrices,int comma_error_hand
                 else
                     err_text();
                 return 1;
-            case READ_MAT:
-                printf("// FOR TEST DELETE THIS LATER // READ_MAT get_mat_b\n");
-                return 0;
 			default:
                 for (i = 0; i < 6 ; i++){
                     if (strcmp(matrices[i]->name , pointer) == 0){
@@ -405,7 +429,7 @@ int get_mat_A(char *pointer, cmd *myCommand, mat **matrices,int comma_error_hand
         switch (myCommand->user_cmd){
             case STOP:
                 err_text();
-                return 1;
+                return 1;            
             default:
                 for (i = 0; i < 6  ; i++){
                     if (strcmp(matrices[i]-> name , pointer) == 0){
