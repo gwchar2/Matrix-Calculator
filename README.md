@@ -2,9 +2,9 @@
  A fully functional 4x4 Matrix Calculator.
 
 # Table of Contents
- 1) Instructions on how to install, set up, and run the project.
+#### 1) Instructions on how to install, set up, and run the project.
 
- 2) Usage:
+#### 2) Usage:
 
     i) A brief guide about the available user input
 
@@ -12,12 +12,10 @@
 
     iii) Errors
 
- 3) Code examples & Tutorial
+#### 3) Code examples & Tutorial
 
 ## Instructions
 ##### Step 1 -
-
-###### Option 1:
 
     Clone the project to your IDE, using HTTPS / SSH / GitHub CLI.
     For example:
@@ -31,8 +29,6 @@ $ cd "Path to file here"
 $ git clone https://github.com/gwchar2/Matrix-Calculator.git
 ```  
     
-###### Option 2:
-
     Download the file physically to your computer via the "Download ZIP" option.    
     Extract the downloaded folder to your chosen repository.
 
@@ -73,10 +69,3 @@ $ ./mainmat
     ii) Output
 
     iii) Errorst
-    print_mat MAT_A              |  Prints the matrix in a nice 4x4. .2lf\t\t\t*\n"
-            "*\tadd_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A+MAT_B\t\t\t\t\t*\n"
-            "*\tsub_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A-MAT_B\t\t\t\t\t*\n"
-            "*\tmul_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A*MAT_B\t\t\t\t\t*\n"
-            "*\tmul_scalar MAT_A,#R,MAT_B    |   MAT_B = MAT_A*#R\t\t\t\t\t*\n"
-            "*\ttrans_mat MAT_A, MAT_B       |   MAT_B = Transpose(MAT_A)\t\t\t\t*\n"
-            "*\tstop                         |   stops the program\t\t\t\t\t*\n");
