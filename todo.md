@@ -45,37 +45,37 @@ Before the program initiates the function - it must print a user friendly messag
 []) Initiates variables in the matrix. read_mat MAT_A, 5, 6.253, -7, -200.5, 23
     If the list of variables includes LESS than 16 numbers - it will initialize the missing numbers to 0.
     If the list includes MORE Than 16 numbers - it will ignore the ones after the first 16.
-[x]) Prints the matrix. print_mat MAT_A - Prints it in a nice 4x4. %.2lf
-[x]) add_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A+MAT_B
-[x]) sub_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A-MAT_B
-[x]) mul_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A*MAT_B
-[x]) mul_scalar MAT_A,#R,MAT_B    |   MAT_B = MAT_A*#R
-[x]) trans_mat MAT_A, MAT_B       |   MAT_B = Transpose(MAT_A)
-[x]) stop                         |   stops the program
+[x] Prints the matrix. print_mat MAT_A - Prints it in a nice 4x4. %.2lf
+[x] add_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A+MAT_B
+[x] sub_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A-MAT_B
+[x] mul_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A*MAT_B
+[x] mul_scalar MAT_A,#R,MAT_B    |   MAT_B = MAT_A*#R
+[x] trans_mat MAT_A, MAT_B       |   MAT_B = Transpose(MAT_A)
+[x] stop                         |   stops the program
 
 
 IMPORTANT:
-    [x] Same matrix can be used twice in same function, for example: sub_mat MAT_A,MAT_B,MAT_A  | MAT_A = MAT_A-MAT_B
-        Must be taken into consideration!
+[x] Same matrix can be used twice in same function, for example: sub_mat MAT_A,MAT_B,MAT_A  | MAT_A = MAT_A-MAT_B
+    Must be taken into consideration!
 
 
 Example for bad commands, and error messages:
-    read_mat MAT_G, 3.2, 8 - Undefined matrix name
-    read_mat mat_a, 3.2, -5.3 - Undefined matrix name
-    read_mat MAT_A, abc, 567 - Argument is not a real number
-    read_mat MAT_A, 3, -4.2, 6, - Extraneous text after end of command
-    read_mat MAT_A - Missing argument
+[]    read_mat MAT_G, 3.2, 8 - Undefined matrix name
+[]    read_mat mat_a, 3.2, -5.3 - Undefined matrix name
+[]   read_mat MAT_A, abc, 567 - Argument is not a real number
+[]   read_mat MAT_A, 3, -4.2, 6, - Extraneous text after end of command
+[]   read_mat MAT_A - Missing argument
 
-x   trans_mat MAT_A MAT_B - Missing comma
-x   sub_mat MAT_A, , MAT_B, MAT_C - Multiple consecutive commas
+[x]   trans_mat MAT_A MAT_B - Missing comma
+[x]   sub_mat MAT_A, , MAT_B, MAT_C - Multiple consecutive commas
 
-x   trans_mat MAT_B, MAT_C, MAT_D  - Extraneous text after end of command
-x   mul_scalar MAT_A, MAT_B, MAT_C - Argument is not a scalar
-x   stop now - Extraneous text after end of command
-x   do_it MAT_A, MAT_B, MAT_C - Undefined command name
-x   Add_Mat MAT_A, MAT_B, MAT_C - Undefined command name
-x   print_mat, MAT_A - Illegal comma
-x   mul_mat MAT_B, MAT_C - Missing argument
+[x]   trans_mat MAT_B, MAT_C, MAT_D  - Extraneous text after end of command
+[x]   mul_scalar MAT_A, MAT_B, MAT_C - Argument is not a scalar
+[x]   stop now - Extraneous text after end of command
+[x]   do_it MAT_A, MAT_B, MAT_C - Undefined command name
+[x]   Add_Mat MAT_A, MAT_B, MAT_C - Undefined command name
+[x]   print_mat, MAT_A - Illegal comma
+[x]   mul_mat MAT_B, MAT_C - Missing argument
 
 
 A correct list of commands:
