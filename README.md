@@ -35,9 +35,9 @@
     Option 2:
         Open the command prompt terminal and navigate to your repository:
         
-            ```shell
+            
             cd: C:\"Path to file here" 
-            ```
+            
 
     
 
