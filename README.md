@@ -8,9 +8,7 @@
 
     i) A brief guide about the available user input
 
-    ii) Output
-
-    iii) Errors
+    ii) Errors
 
 #### 3) Code examples & Tutorial
 
@@ -29,7 +27,7 @@ $ cd "Path to file here"
 $ git clone https://github.com/gwchar2/Matrix-Calculator.git
 ```  
     
-    Download the file physically to your computer via the "Download ZIP" option.    
+    You can also download the file physically to your computer via the "Download ZIP" option.    
     Extract the downloaded folder to your chosen repository.
 
 ##### Step 2 -
@@ -57,6 +55,7 @@ $ ./mainmat
 
 | Command | Output |
 |----------|----------|
+| read_mat MAT_A, [up to 16 doubles seperated with commas] | Inputs to the wanted Matrix |
 | print_mat MAT_A              |  Prints the matrix in a nice 4x4. |
 | add_mat MAT_A , MAT_B , MAT_C    |   MAT_C = MAT_A + MAT_B |
 | sub_mat MAT_A , MAT_B , MAT_C    |   MAT_C = MAT_A - MAT_B |
@@ -65,7 +64,26 @@ $ ./mainmat
 | trans_mat MAT_A , MAT_B       |   MAT_B = Transpose(MAT_A)|
 | stop                         |   Stops the program |
 
+PLEASE ENTER THE CORRECT COMMAND NAME AND AMOUNT OF VARIABLES ! 
+##### Note:
+- There are exactly 6 matrices for your disposal. MAT_A -> MAT_F
+- All the matrices are initiated as zero matrices. If you want to add or initiate them with different values, use the read_mat command.
+- The program will not automatically print the matrices after changing them. If you want to print them you can use the print_mat command.
+- The program will only stop with the stop command.
 
-    ii) Output
+##### Errors
+These errors will appear when you did not enter the correct command name, name of variables, variable type, amount of variables or the correct amount of commas.
+| Output | Error |
+|----------|----------|
+|Missing argument| You did not enter all the variables |
+|Undefined matrix name| Wrong matrix name |
+|Undefined command name| Wrong command name |
+|Argument is not a real number| You did not enter a R type number for read_mat |
+|Extraneous text after end of command| To many arguments! |
+|Missing comma| You are missing a comma in the syntax |
+|Illegal comma| To many commas in the syntax |
+|Multiple consecutive commas| Two or more commas in a row |
+|Argument is not a scalar| You did not enter a scalar for mul_scalar|
 
-    iii) Errorst
+
+

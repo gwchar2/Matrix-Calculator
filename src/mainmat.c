@@ -18,7 +18,7 @@ int main(){
     mat MAT_E = {"MAT_E",{ {0.0} } };
     mat MAT_F = {"MAT_F",{ {0.0} } };
     mat *matrices[6] = {&MAT_A, &MAT_B, &MAT_C, &MAT_D, &MAT_E, &MAT_F};        /* An array of pointers to the pre-defined matrices, for easier communication */
-    
+    /* NEED TO ADD READ_MAT TO THE STARTING MESSAGE !!!!!!!!*/
 
     /* initialize all the pointers in myCommand with a NULL */
     cmd myCommand = {
