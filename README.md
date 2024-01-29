@@ -17,8 +17,7 @@
  ```bash
  $ git clone https://github.com/gwchar2/Matrix-Calculator.git
  ```
- - If you do not wish to do this through your IDE, you can can
-   Open the command prompt terminal and navigate to your wanted repository, and clone the project to there.
+ - If you do not wish to do this through your IDE, you can can Open the command prompt terminal ,navigate to your wanted repository, and clone the project to there.
  ```bash   
  $ cd "Path to file here"
  $ git clone https://github.com/gwchar2/Matrix-Calculator.git
