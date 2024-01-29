@@ -5,10 +5,9 @@
 #### 1) Instructions on how to install, set up, and run the project.
 
 #### 2) Usage:
+- A brief guide about the available user input
 
-    - A brief guide about the available user input
-
-    - Errors
+- Errors
 
 ## Instructions
 ##### Step 1 -
