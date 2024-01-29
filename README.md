@@ -17,7 +17,7 @@
 ## Instructions
 ##### Step 1 -
 
-Option 1:
+###### Option 1:
 
     Clone the project to your IDE, using HTTPS / SSH / GitHub CLI.
     For example:
@@ -31,7 +31,7 @@ $ cd "Path to file here"
 $ git clone https://github.com/gwchar2/Matrix-Calculator.git
 ```  
     
-Option 2:
+###### Option 2:
 
     Download the file physically to your computer via the "Download ZIP" option.    
     Extract the downloaded folder to your chosen repository.
@@ -41,12 +41,18 @@ Option 2:
     After cloning the project or importing the project to a folder, you will now need to compile the files.
     This can be done by pressing the 'Run' button in your IDE. 
     OR
-    Open the command prompt terminal and navigate to your repository:
+    Open the command prompt terminal and navigate to your repository, and make the makefile
 ```bash   
 $ cd "Path to file here"
-```        
-            cd C:\"Path to file here" 
-            
+$ make
+```   
+
+##### Step 3 -
+
+    Run the program.
+```bash   
+$ ./mainmat
+```            
 
     
 
