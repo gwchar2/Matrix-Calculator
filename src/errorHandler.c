@@ -13,31 +13,37 @@
 */
 int check_cmd_name(char *cmd){
     enum Commands com;
-    size_t length_cmd = strlen(cmd);    			/* Gets the size of the user-input command */
-    char temp[length_cmd];              		    /* Makes a new char array with the same size */
-    char lc_cmd = cmd[length_cmd-1];    			/* Stores the last character from cmd */
+    size_t length_cmd;
+    char *temp;										/* Makes a temp char array with the same size */
+    char lc_cmd;
+	length_cmd = strlen(cmd);    					/* Gets the size of the user-input command */
+	lc_cmd = cmd[length_cmd-1];    					/* Holds the last character from cmd */
+	temp = malloc(length_cmd);
     strcpy(temp,cmd);
+             		    
     if (length_cmd > 0) {           				/* If the size is greater than 0*/
         temp[length_cmd - 1] = '\0';    			/* Reduce the size by one */
     }
 	com = process_command(temp);  					/* Send the new array reduced by 1 to be checked for a viable command */
     if (com != INVALID && lc_cmd == ','){       	/* If the new command is a real one, and also the last character is a comma , return 1, else 0. */
+		free(temp);
         return 1;
     }
+	free(temp);
     return 0;
 }
 
-
 /* 
-*This function checks to see if the input in mat_b is a double (R)
+*	This function checks to see if the input in mat_b is a double (R)
+*	Returns 0 if it is, returns 1 if it is not.
 */
 int check_scalar(char *mat_b){
     char *end_pointer;
-    double numericValue = strtod(mat_b, &end_pointer);
-
-    if (mat_b == end_pointer) {
+	strtod(mat_b, &end_pointer);
+    if (*end_pointer == '\0') {				/* Checks to see if the pointer has reached the end of strtok mat_b */
         return 0;
-    } else {
+    } 
+	else {
         return 1;
     }
 }
@@ -91,7 +97,6 @@ enum Commands process_command(char *input) {
 int comma_handler(cmd *myCommand,size_t read){
     size_t i = 0;
     size_t newSize = 0; /* Holds the size of the array without whitespaces */
-    int j = 0;
     int total_comma = 0, total_comma_in_a_row = 0; /* Total amount of commas in the input, and total amount of them in a row. */
     char *noSpace = NULL; /* An array of the input without whitespaces. */
     for (i = 0; i < read; i++){
@@ -183,7 +188,7 @@ int get_mat_B(char *pointer, cmd *myCommand, mat **matrices,int comma_error_hand
     if (pointer != NULL) {
         switch (myCommand->user_cmd){                     
             case MUL_SCALAR:                                            /* If the command is mul_scalar, checks to see if MAT_B = (R) Number */
-                if (!check_scalar(pointer)){
+                if (check_scalar(pointer)){
                     if (handle_comma_error(comma_error_handler) != 0)
                         return 1;
                     else

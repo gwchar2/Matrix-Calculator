@@ -1,6 +1,4 @@
 
-#include <stdio.h>
-#include <string.h>
 #include "mymat.h"
 
 /* Adds two matrices and stores the result in MAT_C */

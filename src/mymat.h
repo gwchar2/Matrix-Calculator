@@ -7,6 +7,9 @@ allowing other modules to use its functionality without having access to the imp
 #ifndef MYMAT_H
 #define MYMAT_H
 #include <stddef.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 /**********************************************
 ****************      Macros      *************
 **********************************************/

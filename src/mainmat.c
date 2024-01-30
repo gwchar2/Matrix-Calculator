@@ -1,33 +1,26 @@
 /* USER INTERACTION AND MAIN HERE */
 #include "mymat.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stddef.h>
-#include <unistd.h>
-
 
 int onStart(cmd *myCommand,mat **matrices);
 void activate_command(cmd *myCommand);
 int check_read_mat(cmd *myCommand,char *pointer,char *inputCopy,mat **matrices);
 int main(){
+	cmd myCommand = {NULL, INVALID, NULL, NULL, NULL, 0, {0}};	/* initialize all the pointers in myCommand with a NULL */
+	mat *matrices[6];        /* An array of pointers to the pre-defined matrices, for easier communication */
     mat MAT_A = {"MAT_A",{{1, 2, 3, 4}, {5, 1, 2, 3}, {4, 5, 1, 2}, {3, 4, 5, 1}} };
     mat MAT_B = {"MAT_B",{{2, 3, 4, 5}, {1, 2, 3, 4}, {5, 1, 2, 3}, {4, 5, 1, 2}} };
     mat MAT_C = {"MAT_C",{ {0.0} } };
     mat MAT_D = {"MAT_D",{ {0.0} } };
     mat MAT_E = {"MAT_E",{ {0.0} } };
     mat MAT_F = {"MAT_F",{ {0.0} } };
-    mat *matrices[6] = {&MAT_A, &MAT_B, &MAT_C, &MAT_D, &MAT_E, &MAT_F};        /* An array of pointers to the pre-defined matrices, for easier communication */
-    /* NEED TO ADD READ_MAT TO THE STARTING MESSAGE !!!!!!!!*/
 
-    /* initialize all the pointers in myCommand with a NULL */
-    cmd myCommand = {
-    .user_input = NULL,
-    .user_mat_a = NULL,                
-    .user_mat_b = NULL,
-    .user_mat_c = NULL,
-    .read_scalars = {0},
-    };
+	matrices[0] = &MAT_A;
+    matrices[1] = &MAT_B;
+    matrices[2] = &MAT_C;
+    matrices[3] = &MAT_D;
+    matrices[4] = &MAT_E;
+    matrices[5] = &MAT_F;
+
 
     welcome(); /* Calls for welcome message */
     while(1){
@@ -50,11 +43,13 @@ int main(){
 int onStart(cmd *myCommand,mat **matrices){
     char *pointer;                                                            /* A character pointer that helps deal with the input */
 	size_t len;                                                               /* Length of the array */
-    ssize_t read;                                                             /* This variable will store how many values were read in getline() including null terminator */
-	len = 0;                                                                  /* This variable will store the total size of the input recieved */
-    char *inputCopy = NULL;
+    size_t read;                                                             /* This variable will store how many values were read in getline() including null terminator */
+    char *inputCopy;
     int comma_error_handler;
-    prompt_message();                                                         /* prompts the user for input */ 
+	inputCopy = NULL;
+	len = 0;                                                                  /* This variable will store the total size of the input recieved */
+
+    prompt_message();                                                         /* prompts the user for input */
 
     /* Get the input from the user into 'myCommand->user_input' */
     if ((read = getline(&(myCommand->user_input), &len, stdin)) == -1) {
@@ -135,15 +130,16 @@ void activate_command(cmd *myCommand){
             msg_trans_mat(myCommand->user_mat_a, myCommand->user_mat_b);
             trans_mat(myCommand->user_mat_a, myCommand->user_mat_b);
             break;
+		default:
+			break;
     }
 }
 
 
 
 int check_read_mat(cmd *myCommand,char *pointer,char *inputCopy,mat **matrices){
-    pointer = strtok(NULL, DELIMITER_2); 
     size_t pointer_size;
-
+	pointer = strtok(NULL, DELIMITER_2); 
     /* Sets the matrix for reading */
     if (get_mat_A(pointer, myCommand, matrices,0)){
         return 1;
