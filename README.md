@@ -31,9 +31,11 @@
  - After cloning the project or importing the project to a folder, you will now need to compile the files.
    This can be done by pressing the 'Run' button in your IDE. 
     OR
- - Open the command prompt terminal and navigate to your repository, and make the makefile
+ - Open the command prompt terminal and navigate to your repository
  ```bash   
  $ cd "Path to file here"
+ ```
+ - If the file multimat is not in the folder, run the following command. If it is in the folder, you can skip this step.
  $ make
  ```   
 
