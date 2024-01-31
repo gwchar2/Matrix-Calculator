@@ -86,7 +86,7 @@ int onStart(cmd *myCommand,mat **matrices){
     CHECK_AND_FREE(get_mat_C(pointer,myCommand,matrices,comma_error_handler));
     pointer = strtok(NULL,DELIMITER_2);
 
-    /* FIFTH VARIABLE ---- EXTRA TEXT ----/ */
+    /* FIFTH VARIABLE EXISTS ---- EXTRA TEXT ----/ */
     if (pointer != NULL) {                                                      /* If the point has not reached a NULL, clearly there is text left! */
         err_text();                                                             /* NO COMMAND needs 4 variables...so return the extra txt error */
         MY_FREE();    
