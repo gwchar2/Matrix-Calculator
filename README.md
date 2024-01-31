@@ -49,12 +49,12 @@
 
 ## Usage  
 ### Available User Input
-##### A list of variables at the disposal of the user:
+#### A list of variables at the disposal of the user:
 The user can choose between 6 different matrices.
 Please use there exact name, or else the program will not work.
 MAT_A, MAT_B, MAT_C, MAT_D, MAT_E, MAT_F
 
-####### *Please notice that the matrices in the table below are meerly for example.
+###### *Please notice that the matrices in the table below are meerly for example.
 ##### A list of commands at the disposal of the user:
 
 | Command | Output |
