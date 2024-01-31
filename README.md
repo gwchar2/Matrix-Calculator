@@ -96,3 +96,7 @@ These errors will appear when you did not enter the correct command name, name o
 
 ## Example Input
 ![User main screen](https://i.postimg.cc/Z5pwxStG/image.png)
+
+![User code segmnet](https://i.postimg.cc/jqDmnB2b/image.png)
+
+![User print mat](https://i.postimg.cc/9QYnjh8G/image.png)
