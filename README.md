@@ -9,7 +9,7 @@
 
 - Errors.
 
-#### 3) Example Code
+#### 3) Example Input
 
 
 ## Instructions
@@ -94,4 +94,5 @@ These errors will appear when you did not enter the correct command name, name o
 |Argument is not a scalar| You did not enter a scalar for mul_scalar|
 
 
-
+## Example Input
+![User main screen](https://i.postimg.cc/Z5pwxStG/image.png)
