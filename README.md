@@ -2,17 +2,17 @@
  A fully functional user-interactive 4x4 Matrix Calculator.
 
 # Table of Contents
-#### 1) Instructions on how to install, set up, and run the project.
+#### 1) [Instructions on how to install, set up, and run the project.](#section-1)
 
-#### 2) Usage:
+#### 2) [Usage:](#section-2)
 - A brief guide about the available user input & output.
 
 - Errors.
 
-#### 3) Example Input
+#### 3) [Example Input](#section-3)
 
 
-## Instructions
+## Instructions <a name="section-1"></a>
 ##### Step 1 -
 
  - Clone the project to your IDE, using HTTPS / SSH / GitHub CLI.
@@ -50,7 +50,7 @@
  $ ./mainmat
  ```            
 
-## Usage  
+## Usage  <a name="section-2"></a>
 ### Available User Input
 #### A list of variables at the disposal of the user:
 The user can choose between 6 different matrices.
@@ -94,7 +94,7 @@ These errors will appear when you did not enter the correct command name, name o
 |Argument is not a scalar| You did not enter a scalar for mul_scalar|
 
 
-## Example Input
+## Example Input <a name="section-3"></a>
 ![User main screen](https://i.postimg.cc/Z5pwxStG/image.png)
 
 ![User code segmnet](https://i.postimg.cc/jqDmnB2b/image.png)
