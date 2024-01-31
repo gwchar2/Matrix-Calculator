@@ -36,6 +36,7 @@
  $ cd "Path to file here"
  ```
  - If the file multimat is not in the folder, run the following command. If it is in the folder, you can skip this step.
+ ```bash
  $ make
  ```   
 
