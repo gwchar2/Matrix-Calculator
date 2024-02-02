@@ -1,6 +1,7 @@
 /* USER INTERACTION AND MAIN HERE */
 #include "mymat.h"
 #include <string.h>
+#include <stdio.h>
 
 int onStart(cmd *myCommand,mat **matrices);
 void activate_command(cmd *myCommand);
@@ -60,10 +61,12 @@ int onStart(cmd *myCommand,mat **matrices){
     /* Analyze the first matrix variable & go to the next token  */
     CHECK_AND_FREE(get_mat_A(pointer,myCommand,matrices,comma_error_handler));
 
-/* CHECK_AND_FREE(c) IF c==0 returns, if c == 1 frees*/
-    if (myCommand->user_cmd == READ_MAT){ /* If the command is READ_MAT, and we have a legal matrix, go to check_read_mat for the remainder of the user input */
-        if(check_read_mat(myCommand,pointer) != 0)
-            return 1; /* ADD FREE !!!!!*/
+    /* If the command is READ_MAT, and we have a legal matrix, go to check_read_mat for the remainder of the user input */
+    if (myCommand->user_cmd == READ_MAT){ 
+        if(check_read_mat(myCommand,pointer) != 0){
+            MY_FREE();
+            return 1;
+        }
         else
             return 0;
     }  

@@ -26,7 +26,7 @@ allowing other modules to use its functionality without having access to the imp
             return 1; \
         } \
         if (c == 2){ \
-            return 2; \
+            return 0; \
         } \
 /**********************************************
 **************     Structures      ***********
