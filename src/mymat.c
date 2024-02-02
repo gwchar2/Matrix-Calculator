@@ -64,3 +64,13 @@ void trans_mat(mat *MAT_A, mat *MAT_B) {
         }
     }
 }
+
+/* Initiates MAT_A with the values recieved. */
+void read_mat(mat *MAT_A, double *array) {
+    int i, j, k=0;
+    for (i = 0; i < MAT_SIZE; i++) {
+        for (j = 0; j < MAT_SIZE; j++) {
+            MAT_A->matrix[i][j] = array[k++];
+        }
+    }
+}

@@ -1,12 +1,12 @@
 /* USER INTERACTION AND MAIN HERE */
 #include "mymat.h"
+#include <string.h>
 
 int onStart(cmd *myCommand,mat **matrices);
 void activate_command(cmd *myCommand);
-int check_read_mat(cmd *myCommand,char *pointer,char *inputCopy,mat **matrices);
 int main(){
 	cmd myCommand = {NULL, INVALID, NULL, NULL, NULL, 0, {0}};	/* initialize all the pointers in myCommand with a NULL */
-	mat *matrices[6];        /* An array of pointers to the pre-defined matrices, for easier communication */
+	mat *matrices[6];                                           /* An array of pointers to the pre-defined matrices, for easier communication */
     mat MAT_A = {"MAT_A",{{1, 2, 3, 4}, {5, 1, 2, 3}, {4, 5, 1, 2}, {3, 4, 5, 1}} };
     mat MAT_B = {"MAT_B",{{2, 3, 4, 5}, {1, 2, 3, 4}, {5, 1, 2, 3}, {4, 5, 1, 2}} };
     mat MAT_C = {"MAT_C",{ {0.0} } };
@@ -20,8 +20,6 @@ int main(){
     matrices[3] = &MAT_D;
     matrices[4] = &MAT_E;
     matrices[5] = &MAT_F;
-
-
     welcome(); /* Calls for welcome message */
     while(1){
         if (onStart(&myCommand,matrices) != 1){
@@ -61,21 +59,24 @@ int onStart(cmd *myCommand,mat **matrices){
 
     inputCopy = (char *)malloc(len);                                          /* Copies the input to a trash string */
     strcpy(inputCopy,myCommand->user_input);
-
-    pointer = strtok(inputCopy, DELIMITER_2); 
+    pointer = strtok(inputCopy, DELIMETER_2); 
 
     /* Analyze the command segment & go to the next token */
     CHECK_AND_FREE(get_Command(pointer,myCommand));
-
-    if (myCommand->user_cmd == READ_MAT){
-        CHECK_AND_FREE(check_read_mat(myCommand,pointer,inputCopy,matrices));
-    }
-
     comma_error_handler = comma_handler(myCommand,read);                        /* Stores the error value received from comma_handler*/
     pointer = strtok(NULL, DELIMETER_1);
 
     /* Analyze the first matrix variable & go to the next token  */
     CHECK_AND_FREE(get_mat_A(pointer,myCommand,matrices,comma_error_handler));
+
+/* CHECK_AND_FREE(c) IF c==0 returns, if c == 1 frees*/
+    if (myCommand->user_cmd == READ_MAT){ /* If the command is READ_MAT, and we have a legal matrix, go to check_read_mat for the remainder of the user input */
+        if(check_read_mat(myCommand,pointer) != 0)
+            return 1; /* ADD FREE !!!!!*/
+        else
+            return 0;
+    }  
+                  
     pointer = strtok(NULL, DELIMETER_1);  
 
     /* Analyze the second matrix variable & go to the next token */
@@ -84,7 +85,7 @@ int onStart(cmd *myCommand,mat **matrices){
 
     /* Analyze the third matrix variable & go to the next token */
     CHECK_AND_FREE(get_mat_C(pointer,myCommand,matrices,comma_error_handler));
-    pointer = strtok(NULL,DELIMITER_2);
+    pointer = strtok(NULL,DELIMETER_2);
 
     /* FIFTH VARIABLE EXISTS ---- EXTRA TEXT ----/ */
     if (pointer != NULL) {                                                      /* If the point has not reached a NULL, clearly there is text left! */
@@ -104,9 +105,10 @@ int onStart(cmd *myCommand,mat **matrices){
 */
 void activate_command(cmd *myCommand){
     switch(myCommand->user_cmd){
-        /*case READ_MAT:
-        void msg_read_mat(mat *matrix);
-        */
+        case READ_MAT:
+            read_mat(myCommand->user_mat_a,myCommand->read_scalars);
+            print_mat(myCommand->user_mat_a);
+            break;
         case PRINT_MAT:
             print_mat(myCommand->user_mat_a);
             break;
@@ -135,29 +137,6 @@ void activate_command(cmd *myCommand){
     }
 }
 
-
-
-int check_read_mat(cmd *myCommand,char *pointer,char *inputCopy,mat **matrices){
-    size_t pointer_size;
-	pointer = strtok(NULL, DELIMITER_2); 
-    /* Sets the matrix for reading */
-    if (get_mat_A(pointer, myCommand, matrices,0)){
-        return 1;
-    }
-
-    /* Cuts to the remainder of the input */
-    pointer = strtok(NULL, "\n"); 
-    pointer_size = strlen(pointer);
-
-    if (pointer == NULL){
-        err_miss_argument();
-        return 1;
-    }
-    
-    
-
-    return 2; /* If its correct, returns 2. */
-}
 
 
 

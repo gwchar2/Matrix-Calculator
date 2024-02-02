@@ -136,6 +136,25 @@ int comma_handler(cmd *myCommand,size_t read){
     return 0;
 }
 
+/*  if (comma_error_handler == 1) err_illegal_comma(), return 1
+*   else if (comma_error_handler == 2) err_miss_comma(), return 1
+*   else if (comma_error_handler == 3) err_consec_comma(), return 1
+*/
+int handle_comma_error(int comma_error_handler){
+    if (comma_error_handler == 1) {
+        err_illegal_comma(); 
+        return 1;
+    }
+    else if (comma_error_handler == 2) {
+        err_miss_comma(); 
+        return 1;
+    }
+    else if (comma_error_handler == 3) {
+        err_consec_comma(); 
+        return 1;
+    }
+    return 0; 
+}
 
 /*
 *   This function analyzes the third variable. 
@@ -150,7 +169,7 @@ int get_mat_C(char *pointer, cmd *myCommand, mat **matrices,int comma_error_hand
         return 1;
     }
     else if (pointer != NULL){
-        if (myCommand->user_cmd == TRANS_MAT || myCommand->user_cmd == PRINT_MAT ){     
+        if (myCommand->user_cmd == TRANS_MAT){     
             err_text();
             return 1;                                            /* If the command is trans_mat or print_mat return extra text error */
         }
@@ -205,9 +224,6 @@ int get_mat_B(char *pointer, cmd *myCommand, mat **matrices,int comma_error_hand
                 else
                     err_text();
                 return 1;
-            case READ_MAT:
-                printf("// FOR TEST DELETE THIS LATER // READ_MAT get_mat_b\n");
-                return 0;
 			default:
                 for (i = 0; i < 6 ; i++){
                     if (strcmp(matrices[i]->name , pointer) == 0){
@@ -238,35 +254,34 @@ int get_mat_A(char *pointer, cmd *myCommand, mat **matrices,int comma_error_hand
     /*  ---- MAT_A ---- */
     int i=0;
     int numcheck = 0;
-    if (pointer == NULL && myCommand->user_cmd != STOP){
+    if (pointer == NULL && myCommand->user_cmd != STOP){ /* If the command is NOT STOP and string is NULL, return missing argument */
         err_miss_argument();
         return 1;
     }
-    else if (pointer == NULL && myCommand->user_cmd == STOP){
+    else if (pointer == NULL && myCommand->user_cmd == STOP){ /* If string is NULL, and command is stop, return  stop*/
         msg_stop();
         stop();
     }
     else { 
-        switch (myCommand->user_cmd){
-            case STOP:
+        switch (myCommand->user_cmd){ /* Go through the other unique options for commands */
+            case STOP: /* If the command is STOP, and string is NOT NULL, return error. */
                 err_text();
                 return 1;
             default:
-                for (i = 0; i < 6  ; i++){
+                for (i = 0; i < 6  ; i++){ /* Find the correct matrix name by comparison, and save the correct matrix to the variable slot in myCommand */
                     if (strcmp(matrices[i]-> name , pointer) == 0){
                         myCommand->user_mat_a = matrices[i];
                         numcheck = 1;
                         break;
                     }
                 }
-                if (numcheck != 1){
+                if (numcheck != 1){ /* If cant find the correct matrix name, return an error */
                     if (handle_comma_error(comma_error_handler) != 0)
                         return 1;
                     else
                         err_mat_name(); 
                     return 1;
-                }                                                         
-                break;
+                }                                   
          }
     }
     return 0;
@@ -300,26 +315,6 @@ int get_Command(char *pointer,cmd *myCommand){
 }
 
 
-/*  if (comma_error_handler == 1) err_illegal_comma(), return 1
-*   else if (comma_error_handler == 2) err_miss_comma(), return 1
-*   else if (comma_error_handler == 3) err_consec_comma(), return 1
-*/
-int handle_comma_error(int comma_error_handler){
-    if (comma_error_handler == 1) {
-        err_illegal_comma(); 
-        return 1;
-    }
-    else if (comma_error_handler == 2) {
-        err_miss_comma(); 
-        return 1;
-    }
-    else if (comma_error_handler == 3) {
-        err_consec_comma(); 
-        return 1;
-    }
-    return 0; 
-}
-
 /*  
 *   This function frees the dynamicaly allocated memory (If it can)
 */
@@ -334,6 +329,70 @@ void free_data(char *input, char *inputCopy){
     }
 }
 
+
 void stop(){
      exit(0);
+}
+
+
+/*
+*   Returns 0 if the values recieved are ok.
+*   Returns 1 with an error if the values are for some reason not ok.
+*/
+int check_read_mat(cmd *myCommand,char *pointer){
+    size_t i = 0, size_remainder;                                                               /* The size of the remainding input */
+    int numCounter = 0, total_comma = 0, total_comma_in_a_row = 0,j;                            /* Total amount of scalars, Total amount of commas in the input, and total amount of them in a row. */
+    char *remainder_copy;
+    remainder_copy = (char*)malloc(strlen(myCommand->user_input) + 1);                          /* Initiates the correct size for the input */
+    strcpy(remainder_copy,myCommand->user_input);                                               /* Copies the input */ 
+    size_remainder = strlen(remainder_copy);                                                    /* Holds the size of the input */
+
+    for (j = 0; j < 16; j ++) {
+        myCommand->read_scalars[i] = 0;
+    }
+
+    while ((pointer = strtok(NULL, DELIMETER_1)) != NULL && numCounter < 16){                   /* As long as we have not reached the end of the input */
+        if (check_scalar(pointer) == 0){
+            myCommand->read_scalars[numCounter] = turn_to_scalar(pointer);
+            numCounter++;
+        }
+        else {
+            err_not_scalar();
+            return 1;
+        } 
+
+    }
+    if (pointer != NULL && numCounter >= 16){                                                   /* if we have more than 16 numbers */
+        err_text();
+        return 1;
+    }
+
+    /* Checks for extra and consecutive commas */
+    for (i = 0; i < size_remainder; i++){
+        if (!WHITESPACE(remainder_copy[i])){
+            if (remainder_copy[i] == ','){
+                total_comma++;
+                total_comma_in_a_row++;
+                if (total_comma_in_a_row >= 2){
+                    return handle_comma_error(3);
+                }
+            }
+            else {
+                total_comma_in_a_row = 0;
+            }
+            
+        }
+    }
+    if ((numCounter == 0 && total_comma >= 1) || total_comma > 16 ){
+        return handle_comma_error(1);
+    }
+    else if (total_comma < numCounter){
+        return handle_comma_error(2); 
+    }
+    else if (total_comma > numCounter){
+        err_text();
+        return 1;
+    }
+
+    return 0;
 }
