@@ -6,6 +6,7 @@
 *	This application allows you to perform various matrix operations.			*
 *	Here is a list of commands at your disposal:						*
 *	print_mat MAT_A              |  Prints the matrix in a nice 4x4. .2lf			*
+*	read_mat MAT_A,#R,#R,#R,#R...|   MAT_A = #R,#R,#R,#R					*
 *	add_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A+MAT_B					*
 *	sub_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A-MAT_B					*
 *	mul_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A*MAT_B					*

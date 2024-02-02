@@ -41,6 +41,7 @@ void welcome(){
     printf("*************************************************************************************************\n");
     printf("*\tThis application allows you to perform various matrix operations.\t\t\t*\n*\tHere is a list of commands at your disposal:\t\t\t\t\t\t*\n");
     printf("*\tprint_mat MAT_A              |  Prints the matrix in a nice 4x4. .2lf\t\t\t*\n"
+            "*\tread_mat MAT_A,#R,#R,#R,#R...|   MAT_A = #R,#R,#R,#R\t\t\t\t\t*\n"
             "*\tadd_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A+MAT_B\t\t\t\t\t*\n"
             "*\tsub_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A-MAT_B\t\t\t\t\t*\n"
             "*\tmul_mat MAT_A,MAT_B,MAT_C    |   MAT_C = MAT_A*MAT_B\t\t\t\t\t*\n"
