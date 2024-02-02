@@ -25,9 +25,6 @@ allowing other modules to use its functionality without having access to the imp
             MY_FREE(); /* resets the data if needed to */ \
             return 1; \
         } \
-        if (c == 2){ \
-            return 0; \
-        } \
 /**********************************************
 **************     Structures      ***********
 **********************************************/
@@ -68,6 +65,8 @@ typedef struct{
 void print_mat(mat *matrix); /* Print matrix values for the specified matrix */
 
 void prompt_message(); /* This function prompts the user for input */
+
+void user_input(cmd *myCommand); /* This function prints the users input */
 
 void welcome(); /* This function send the user a very nice welcome message on his first time to the app */
 

@@ -1,7 +1,6 @@
 /* USER INTERACTION AND MAIN HERE */
 #include "mymat.h"
 #include <string.h>
-#include <stdio.h>
 
 int onStart(cmd *myCommand,mat **matrices);
 void activate_command(cmd *myCommand);
@@ -24,7 +23,7 @@ int main(){
     welcome();                                                                /* Calls for welcome message */
     while(1){
         if (onStart(&myCommand,matrices) != 1){
-            printf("\nUser Input: %s",myCommand.user_input);
+            user_input(&myCommand);
             activate_command(&myCommand);
         }
 	}
@@ -63,7 +62,7 @@ int onStart(cmd *myCommand,mat **matrices){
 
     /* If the command is READ_MAT, and we have a legal matrix, go to check_read_mat for the remainder of the user input */
     if (myCommand->user_cmd == READ_MAT){ 
-        if(check_read_mat(myCommand,pointer) != 0){
+        if(check_read_mat(myCommand,pointer)){
             MY_FREE();
             return 1;
         }

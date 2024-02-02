@@ -28,6 +28,10 @@ void prompt_message(){
     printf("\nEnter the desired command and matrices with the correct syntax!:  (e.g., mul_mat mat_a, mat_b, mat_c):\n");
 }
 
+void user_input(cmd *myCommand){
+    printf("\nUser Input: %s",myCommand->user_input);
+}
+
 /* This function send the user a very nice welcome message on his first time to the app */
 void welcome(){
     printf("*************************************************************************************************\n");

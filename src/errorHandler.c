@@ -348,7 +348,7 @@ int check_read_mat(cmd *myCommand,char *pointer){
     size_remainder = strlen(remainder_copy);                                                    /* Holds the size of the input */
 
     for (j = 0; j < 16; j ++) {
-        myCommand->read_scalars[i] = 0;
+        myCommand->read_scalars[j] = 0;
     }
 
     while ((pointer = strtok(NULL, DELIMETER_1)) != NULL && numCounter < 16){                   /* As long as we have not reached the end of the input */
