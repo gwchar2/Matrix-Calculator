@@ -7,8 +7,8 @@ void activate_command(cmd *myCommand);
 int main(){
 	cmd myCommand = {NULL, INVALID, NULL, NULL, NULL, 0, {0}};	/* initialize all the pointers in myCommand with a NULL */
 	mat *matrices[6];                                           /* An array of pointers to the pre-defined matrices, for easier communication */
-    mat MAT_A = {"MAT_A",{{1, 2, 3, 4}, {5, 1, 2, 3}, {4, 5, 1, 2}, {3, 4, 5, 1}} };
-    mat MAT_B = {"MAT_B",{{2, 3, 4, 5}, {1, 2, 3, 4}, {5, 1, 2, 3}, {4, 5, 1, 2}} };
+    mat MAT_A = {"MAT_A",{ {0.0} } };
+    mat MAT_B = {"MAT_B",{ {0.0} } };
     mat MAT_C = {"MAT_C",{ {0.0} } };
     mat MAT_D = {"MAT_D",{ {0.0} } };
     mat MAT_E = {"MAT_E",{ {0.0} } };
@@ -20,20 +20,11 @@ int main(){
     matrices[3] = &MAT_D;
     matrices[4] = &MAT_E;
     matrices[5] = &MAT_F;
-    welcome(); /* Calls for welcome message */
+    welcome();                                                                /* Calls for welcome message */
     while(1){
         if (onStart(&myCommand,matrices) != 1){
             printf("\nUser Input: %s",myCommand.user_input);
             activate_command(&myCommand);
-            printf("\n****************************************************\n");
-            printf("\n*******************  TESTS  ************************\n");
-            printf("User input: %s",myCommand.user_input);
-            printf("User CMD: %d\n",myCommand.user_cmd);
-            printf("User CMD: %s\n",myCommand.user_mat_a->name);
-            printf("User CMD: %s\n",myCommand.user_mat_b->name);
-            printf("User CMD: %s\n",myCommand.user_mat_c->name);
-            printf("User CMD: %f\n",myCommand.user_scalar);
-            printf("****************************************************\n");
         }
 	}
 }
@@ -106,8 +97,7 @@ int onStart(cmd *myCommand,mat **matrices){
 void activate_command(cmd *myCommand){
     switch(myCommand->user_cmd){
         case READ_MAT:
-            read_mat(myCommand->user_mat_a,myCommand->read_scalars);
-            print_mat(myCommand->user_mat_a);
+            read_mat(myCommand);
             break;
         case PRINT_MAT:
             print_mat(myCommand->user_mat_a);

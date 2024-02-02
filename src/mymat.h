@@ -120,7 +120,7 @@ void mul_scalar(mat *MAT_A, double num, mat *MAT_B); /* Multiply MAT_A by a scal
 
 void trans_mat(mat *MAT_A, mat *MAT_B); /* Transpose MAT_A, store the result in MAT_B */
 
-void read_mat(mat *MAT_A, double *array); /* Initiates a matrix with specific input */
+void read_mat(cmd *myCommand); /* Initiates a matrix with specific input */
 
 /**********************************************
 *******      errorHandler commands       ******
