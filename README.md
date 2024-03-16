@@ -74,7 +74,7 @@ MAT_A, MAT_B, MAT_C, MAT_D, MAT_E, MAT_F
 
 PLEASE ENTER THE CORRECT COMMAND NAME AND AMOUNT OF VARIABLES ! 
 ##### Note:
-- There are exactly 6 matrices for your disposal. MAT_A -> MAT_F
+- There are exactly 6 matrices at your disposal. MAT_A -> MAT_F
 - All the matrices are initiated as zero matrices. If you want to add or initiate them with different values, use the read_mat command.
 - The program will not automatically print the matrices after changing them. If you want to print them you can use the print_mat command.
 - The program will only stop with the stop command.
